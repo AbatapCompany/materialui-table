@@ -4,7 +4,7 @@
 
 <h1 align="center">material-table</h1>
 
-<div align="center">
+<div>
 
 A simple and powerful Datatable for React based on [Material-UI Table](https://material-ui.com/api/table/) with some additional features:
 - filter in header
