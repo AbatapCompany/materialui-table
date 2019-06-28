@@ -6,6 +6,7 @@ import { MTablePagination, MTableSteppedPagination } from './components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import DataManager from './utils/data-manager';
 import { debounce } from 'debounce';
+import { useWindowSize } from './utils/use-window-size';
 /* eslint-enable no-unused-vars */
 
 let tableCounter = 1;
@@ -585,7 +586,7 @@ export default class MaterialTable extends React.Component {
               onGroupRemoved={this.onGroupRemoved}
             />
           }
-          <ScrollBar double={props.options.doubleHorizontalScroll} tableId={this.id}>
+          <ScrollBar double={props.options.doubleHorizontalScroll} tableId={this.id} ownProps={this.props}>
             <Droppable droppableId="headers" direction="horizontal">
               {(provided, snapshot) => (
                 <div ref={provided.innerRef}>
@@ -617,9 +618,17 @@ export default class MaterialTable extends React.Component {
       content: '';
       position: absolute;
       left: 0;
-      top: 0;
+      top: -1px;
       width: 100%;
-      border-bottom: 1px solid rgba(0,0,0,0.12);
+      border-bottom: 1px solid rgba(224, 224, 224, 1);
+    }
+    tbody td.cell-fixed:after,  thead th.MuiTableCell-head:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 100%;
+      border-bottom: 1px solid rgba(224, 224, 224, 1);
     }`}</style>
       </DragDropContext>
     );
@@ -627,13 +636,30 @@ export default class MaterialTable extends React.Component {
 }
 
 const ScrollBar = ({ double, children, tableId }) => {
-  const [scrollX, setScrollX] = React.useState(0);
+  const [divRef, setDivRef] = React.useState(null);
+  const [cellFixedStyle, setCellFixedStyle] = React.useState('');
+  useWindowSize();
 
-  let divRef = null;
-  const setRef = ref => divRef = ref
+  const setRef = ref => setDivRef(ref
     && ref.children[0]
     && ref.children[0].children
-    && ref.children[0].children[0];
+    && ref.children[0].children[0]);
+
+  if (divRef) {
+      let left = 0;
+      const firtRowChildren = divRef.children[0].children[0].children[0].children;
+      let style = '';
+      for(let i = 0; i < firtRowChildren.length; ++i) {
+        const item = firtRowChildren[i];
+        if (item.className.indexOf('cell-fixed') !== -1) {
+          style += `#${tableId} .cell-fixed:nth-child(${i + 1}) { position: sticky; left: ${left}px; } `;
+          left += item.offsetWidth;
+        }
+      }
+      if (style !== '' && style !== cellFixedStyle) {
+        setCellFixedStyle(style);
+      }
+  }
 
   if (double) {
     return (
@@ -644,9 +670,12 @@ const ScrollBar = ({ double, children, tableId }) => {
   }
   else {
     return (
-      <div ref={setRef} style={{ overflowX: 'auto' }} onScroll={() => divRef && setScrollX(divRef.scrollLeft)}>
+      <div ref={setRef} style={{ overflowX: 'auto' }} >
         {children}
-        <style>{`#${tableId} .cell-fixed { transform: translateX(${scrollX}px); }`}</style>
+        {
+          cellFixedStyle !== '' && 
+          <style>{cellFixedStyle}</style>
+        }
       </div>
     );
   }

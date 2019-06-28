@@ -29,6 +29,9 @@ const styles = theme => ({
     },
     '.MuiTableCell-head.cell-fixed, .MuiTableCell-footer.cell-fixed': {
       zIndex: 11
+    },
+    'tfoot.MuiTableFooter-root td': {
+      border: 'none'
     }
   }
 });
