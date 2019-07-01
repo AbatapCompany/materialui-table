@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
     TextField, FormControl, Checkbox,
     ListItemText, InputAdornment, withStyles,
-    Popover, List, ListItem, Divider, Link
+    Popover, List, ListItem, Divider, Link, Typography
 } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import IconButton from '@material-ui/core/IconButton';
@@ -162,6 +162,7 @@ class MTableFilterButton extends React.Component {
         return (
             <>
                 <TextField
+                    autoFocus
                     type='number'
                     className={classes.filterNumericFrom}
                     value={(columnDef.tableData.filterValue && columnDef.tableData.filterValue[0]) || ''}
@@ -203,7 +204,9 @@ class MTableFilterButton extends React.Component {
                                     <ClearIcon />
                                 </IconButton>
                             }
-                                ]
+                                <Typography component="p" variant="body1" color="textSecondary" >
+                                    ]
+                                </Typography>
                             </InputAdornment>
                         )
                     }}
@@ -216,6 +219,7 @@ class MTableFilterButton extends React.Component {
 
         return (
             <TextField
+                autoFocus
                 style={columnDef.type === 'numeric' ? { float: 'right' } : {}}
                 type={columnDef.type === 'numeric' ? 'number' : 'text'}
                 value={columnDef.tableData.filterValue || ''}
@@ -288,7 +292,10 @@ class MTableFilterButton extends React.Component {
         return (
             <span title={this.getFilterTitle()} className={classes.filterIconWrapper}>
                 <this.props.icons.Filter
-                    className={(columnDef.tableData.filterValue ? classes.filterIconFilled : 'empty-header-filter-button ' + classes.filterIconEmpty)}
+                    className={(columnDef.tableData.filterValue
+                        ? classes.filterIconFilled
+                        : (popoverOpened ? '' : 'empty-header-filter-button ') + classes.filterIconEmpty)
+                    }
                     aria-owns={popoverOpened ? 'filter-popover' : undefined}
                     aria-haspopup="true"
                     variant="contained"
