@@ -96,7 +96,7 @@ const App = () => {
       { title: 'Cinsiyet', field: 'sex', disableClick: true, editable: 'onAdd', aggregation: 'custom', render: sexColumnRender },
       { title: 'Tipi', field: 'type', removable: false, editable: 'never' },
       { title: 'Doğum Yılı', field: 'birthDate', type: 'date', filtering: false, aggregation: 'max' },
-      { title: 'Doğum Yeri', field: 'birthCity', lookup: { 34: 'İstanbul', 0: 'Şanlıurfa' } },
+      { title: 'Doğum Yeri', field: 'birthCity', lookup: { 34: 'İstanbul', 0: 'Şanlıurfa', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10', 11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19' } },
       { title: 'Kayıt Tarihi', field: 'insertDateTime', type: 'datetime' },
       { title: 'Zaman', field: 'time', type: 'time' },
       { title: 'Salary, $', field: 'salary', type: 'numeric', aggregation: 'avg', digits: 2 }
@@ -150,6 +150,12 @@ const App = () => {
                 columns={state.columns}
                 data={state.data}
                 title="Demo Title"
+                localization={{
+                  filter: {
+                    clearFilter: 'Очистить',
+                    selectAll: 'Выбрать все',
+                  }
+                }}
                 options={{
                   aggregation: true,
                   columnsButton: true,

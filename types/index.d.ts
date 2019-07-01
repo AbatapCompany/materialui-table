@@ -242,6 +242,10 @@ export interface Localization {
   header?: {
     actions?: string;
   };
+  filter?: {
+    clearFilter?: string;
+    selectAll?: string;
+  };
   grouping?: {
     groupedBy?: string;
     placeholder?: string;

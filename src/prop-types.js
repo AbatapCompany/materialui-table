@@ -157,6 +157,7 @@ export const propTypes = {
     pagination: PropTypes.object,
     toolbar: PropTypes.object,
     header: PropTypes.object,
+    filter: PropTypes.object,
     body: PropTypes.object
   }),
   initialFormData: PropTypes.object,

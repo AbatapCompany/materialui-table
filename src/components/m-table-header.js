@@ -72,6 +72,7 @@ export class MTableHeader extends React.Component {
             <>
               {content}
               <this.props.components.FilterButton
+                localization={this.props.localization}
                 icons={this.props.icons}
                 columnDef={columnDef}
                 onFilterChanged={this.props.onFilterChanged}

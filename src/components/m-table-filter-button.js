@@ -3,8 +3,10 @@ import * as React from 'react';
 import {
     TextField, FormControl, Checkbox,
     ListItemText, InputAdornment, withStyles,
-    Popover, List, ListItem,
+    Popover, List, ListItem, Divider, Link
 } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
+import IconButton from '@material-ui/core/IconButton';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import PropTypes from 'prop-types';
@@ -104,27 +106,43 @@ class MTableFilterButton extends React.Component {
     }
     renderLookupFilter = (columnDef) => {
         const { classes } = this.props;
+        const localization = { ...MTableFilterButton.defaultProps.localization, ...this.props.localization };
         return (
             <FormControl style={{ width: '100%' }}>
-                <List className={classes.filterList}>
-                    {Object.keys(columnDef.lookup)
-                        .sort((k1, k2) => (`${columnDef.lookup[k1]}`.localeCompare(`${columnDef.lookup[k2]}`)))
-                        .map(key => (
-                        <ListItem
-                            className={classes.filterListItem}
-                            key={key} role={undefined} dense button
-                            onClick={() => this.handleLookupCheckboxToggle(columnDef, key)}
-                        >
-                            <Checkbox
-                                className={classes.filterCheckbox}
-                                checked={columnDef.tableData.filterValue ? columnDef.tableData.filterValue.indexOf(key.toString()) > -1 : false}
-                                tabIndex={-1}
-                                disableRipple
-                            />
-                            <ListItemText primary={columnDef.lookup[key]} className={classes.filterText} />
-                        </ListItem>
-                    ))}
-                </List>
+                    <List className={classes.filterList}>
+                        {Object.keys(columnDef.lookup)
+                            .sort((k1, k2) => (`${columnDef.lookup[k1]}`.localeCompare(`${columnDef.lookup[k2]}`)))
+                            .map(key => (
+                            <ListItem
+                                className={classes.filterListItem}
+                                key={key} role={undefined} dense button
+                                onClick={() => this.handleLookupCheckboxToggle(columnDef, key)}
+                            >
+                                <Checkbox
+                                    className={classes.filterCheckbox}
+                                    checked={columnDef.tableData.filterValue ? columnDef.tableData.filterValue.indexOf(key.toString()) > -1 : false}
+                                    tabIndex={-1}
+                                    disableRipple
+                                />
+                                <ListItemText primary={columnDef.lookup[key]} className={classes.filterText} />
+                            </ListItem>
+                        ))}
+                    </List>
+                    <div className={classes.filterListFooter}>
+                        <Divider />
+                        {
+                            !!columnDef.tableData.filterValue &&
+                            <Link className={classes.filterListClearLink} onClick={() => this.props.onFilterChanged(columnDef.tableData.id, undefined)}>
+                                {localization.clearFilter}
+                            </Link>
+                        }
+                        {
+                            !columnDef.tableData.filterValue &&
+                            <Link className={classes.filterListClearLink} onClick={() => this.props.onFilterChanged(columnDef.tableData.id, Object.keys(columnDef.lookup))}>
+                                {localization.selectAll}
+                            </Link>
+                        }
+                    </div>
             </FormControl>
         );
     }
@@ -150,9 +168,21 @@ class MTableFilterButton extends React.Component {
                     onChange={(event) => this.handleFilterNumericChange(columnDef, event.target.value, 0)}
                     InputProps={{
                         startAdornment: (
-                            <InputAdornment position="start">
+                            <InputAdornment position="start" className={classes.startAdornment}>
                                 [
                             </InputAdornment>
+                        ),
+                        endAdornment: (
+                            <>
+                            {
+                                ((columnDef.tableData.filterValue && columnDef.tableData.filterValue[0]) || '') !== '' &&
+                                <InputAdornment position="end" className={classes.endAdornment}>
+                                    <IconButton className={classes.clearIcon} onClick={() => this.handleFilterNumericChange(columnDef, '', 0)}>
+                                        <ClearIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            </>
                         )
                     }}
                 />
@@ -166,7 +196,13 @@ class MTableFilterButton extends React.Component {
                     onChange={(event) => this.handleFilterNumericChange(columnDef, event.target.value, 1)}
                     InputProps={{
                         endAdornment: (
-                            <InputAdornment position="start">
+                            <InputAdornment position="end" className={classes.endAdornment}>
+                            {
+                                ((columnDef.tableData.filterValue && columnDef.tableData.filterValue[1]) || '') !== '' &&
+                                <IconButton className={classes.clearIcon} onClick={() => this.handleFilterNumericChange(columnDef, '', 1)}>
+                                    <ClearIcon />
+                                </IconButton>
+                            }
                                 ]
                             </InputAdornment>
                         )
@@ -176,6 +212,8 @@ class MTableFilterButton extends React.Component {
         );
     }
     renderDefaultFilter = (columnDef) => {
+        const { classes } = this.props;
+
         return (
             <TextField
                 style={columnDef.type === 'numeric' ? { float: 'right' } : {}}
@@ -189,6 +227,18 @@ class MTableFilterButton extends React.Component {
                         <InputAdornment position="start">
                             <></>
                         </InputAdornment>
+                    ),
+                    endAdornment: (
+                        <>
+                        {
+                            (columnDef.tableData.filterValue || '') !== '' &&
+                            <InputAdornment position="end" className={classes.endAdornment}>
+                                <IconButton className={classes.clearIcon} onClick={() => this.props.onFilterChanged(columnDef.tableData.id, '')}>
+                                    <ClearIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                        </>
                     )
                 }}
             />
@@ -269,12 +319,22 @@ class MTableFilterButton extends React.Component {
 }
 
 export const styles = theme => ({
+    clearIcon: {
+        width: '22px',
+        height: '22px',
+        padding: '4px',
+        '& svg': {
+            width: '16px',
+            height: '16px'
+        }
+
+    },
     filterIcon: {
         verticalAlign: 'middle',
-        cursor: 'pointer',
+        cursor: 'pointer'
     },
     filterBody: {
-        padding: '8px'
+        padding: '4px'
     },
     filterCheckbox: {
         padding: '12px'
@@ -283,7 +343,20 @@ export const styles = theme => ({
         padding: '0'
     },
     filterListItem: {
-        padding: '0 12px'
+        marginRight: '14px'
+    },
+    filterListFooter: {
+        position: 'sticky',
+        bottom: 0,
+        backgroundColor: 'white'
+    },
+    filterListClearLink: {
+        marginTop: '10px',
+        marginBottom: '10px',
+        cursor: 'pointer',
+        display: 'block',
+        textAlign: 'center',
+        width: '100%',
     },
     filterText: {
         fontSize: '1rem',
@@ -291,20 +364,34 @@ export const styles = theme => ({
         lineHeight: '1.5em'
     },
     filterNumericFrom: {
-        width: '100px',
+        width: '80px',
         marginRight: '5px'
     },
     filterNumericTo: {
-        width: '100px',
+        width: '80px',
         marginLeft: '5px'
     },
+    startAdornment: {
+        marginRight: 0
+    },
+    endAdornment: {
+        marginLeft: 0
+    }
 });
+
+MTableFilterButton.defaultProps = {
+    localization: {
+        clearFilter: 'Clear',
+        selectAll: 'Select all'
+    }
+  };
 
 MTableFilterButton.propTypes = {
     icons: PropTypes.object.isRequired,
     columnDef: PropTypes.object.isRequired,
     onFilterChanged: PropTypes.func.isRequired,
     classes: PropTypes.object,
+    localization: PropTypes.object,
 };
 
 export default withStyles(styles)(MTableFilterButton);

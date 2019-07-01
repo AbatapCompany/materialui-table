@@ -32,6 +32,14 @@ const styles = theme => ({
     },
     'tfoot.MuiTableFooter-root td': {
       border: 'none'
+    },
+    'input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
+      /* display: none; <- Crashes Chrome on hover */
+      WebkitAppearance: 'none',
+      margin: 0, /* <-- Apparently some margin are still there even though it's hidden */
+    },
+    'input[type=number]': {
+      MozAppearance: 'textfield', /* Firefox */
     }
   }
 });
