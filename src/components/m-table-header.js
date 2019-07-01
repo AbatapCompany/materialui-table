@@ -242,6 +242,12 @@ export const styles = theme => ({
     top: 0,
     zIndex: 10,
     backgroundColor: theme.palette.background.paper, // Change according to theme,
+    '& > span .empty-header-filter-button': {
+      display: 'none'
+    },
+    '& > span:hover .empty-header-filter-button': {
+        display: 'block'
+    }
   }
 });
 

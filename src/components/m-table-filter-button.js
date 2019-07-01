@@ -285,12 +285,10 @@ class MTableFilterButton extends React.Component {
         if (columnDef.filtering === false) return null;
         const { classes } = this.props;
         const popoverOpened = this.state.anchorEl !== null;
-        const iconColor = `rgba(0, 0, 0, ${columnDef.tableData.filterValue ? '1' : '0.2'})`;
         return (
-            <span title={this.getFilterTitle()}>
+            <span title={this.getFilterTitle()} className={classes.filterIconWrapper}>
                 <this.props.icons.Filter
-                    style={{ color: iconColor }}
-                    className={classes.filterIcon}
+                    className={(columnDef.tableData.filterValue ? classes.filterIconFilled : 'empty-header-filter-button ' + classes.filterIconEmpty)}
                     aria-owns={popoverOpened ? 'filter-popover' : undefined}
                     aria-haspopup="true"
                     variant="contained"
@@ -329,9 +327,20 @@ export const styles = theme => ({
         }
 
     },
-    filterIcon: {
+    filterIconWrapper: {
+        width: '24px',
+        height: '24px'
+    },
+    filterIconFilled: {
         verticalAlign: 'middle',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        color: 'rgba(0, 0, 0, 1)'
+
+    },
+    filterIconEmpty: {
+        verticalAlign: 'middle',
+        cursor: 'pointer',
+        color: 'rgba(0, 0, 0, 0.2)',
     },
     filterBody: {
         padding: '4px'
