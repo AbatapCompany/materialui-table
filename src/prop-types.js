@@ -122,6 +122,7 @@ export const propTypes = {
     exportFileName: PropTypes.string,
     exportCsv: PropTypes.func,
     filtering: PropTypes.bool,
+    filterChilds: PropTypes.bool,
     filterType: PropTypes.oneOf(['row', 'header']),
     filterCellStyle: PropTypes.object,
     fixedColumns: PropTypes.number,
@@ -147,6 +148,7 @@ export const propTypes = {
     showTitle: PropTypes.bool,
     showTextRowsSelected: PropTypes.bool,
     sorting: PropTypes.bool,
+    sortChilds: PropTypes.bool,
     toolbar: PropTypes.bool
   }),
   localization: PropTypes.shape({

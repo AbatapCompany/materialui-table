@@ -18,6 +18,8 @@ export default class DataManager {
   treefiedDataLength = 0;
   treeDataMaxLevel = 0;
   defaultExpanded = false;
+  filterChilds = false;
+  sortChilds = false;
 
   data = [];
   columns = [];
@@ -72,6 +74,14 @@ export default class DataManager {
 
   setDefaultExpanded(expanded) {
     this.defaultExpanded = expanded;
+  }
+
+  setFilterChilds(filterChilds) {
+    this.filterChilds = filterChilds;
+  }
+
+  setSortChilds(sortChilds) {
+    this.sortChilds = sortChilds;
   }
 
   changeApplySearch(applySearch) {
@@ -487,20 +497,25 @@ export default class DataManager {
       this.columns.filter(columnDef => columnDef.tableData.filterValue).forEach(columnDef => {
         const { lookup, type, tableData } = columnDef;
         if (columnDef.customFilterAndSearch) {
-          this.filteredData = this.filteredData.filter(row => !!columnDef.customFilterAndSearch(tableData.filterValue, row, columnDef));
+          this.filteredData = this.filteredData.filter(row => {
+            const parent = this.filterChilds ? null : this.getRootParent(row);
+            return !!columnDef.customFilterAndSearch(tableData.filterValue, parent || row, columnDef);
+          });
         }
         else {
           if (lookup) {
             this.filteredData = this.filteredData.filter(row => {
-              const value = this.getFieldValue(row, columnDef, false);
+              const parent = this.filterChilds ? null : this.getRootParent(row);
+              const value = this.getFieldValue(parent || row, columnDef, false);
               return !tableData.filterValue ||
                 tableData.filterValue.length === 0 ||
                 tableData.filterValue.indexOf(value !== undefined && value !== null && value.toString()) > -1;
             });
           } else if (type === 'numeric') {
             this.filteredData = this.filteredData.filter(row => {
+              const parent = this.filterChilds ? null : this.getRootParent(row);
               const term = tableData.filterValue;
-              const value = this.getFieldValue(row, columnDef);
+              const value = this.getFieldValue(parent || row, columnDef);
               if (!term) return true;
               if (term[0] && value < term[0]) return false;
               if (term[1] && value > term[1]) return false;
@@ -508,13 +523,15 @@ export default class DataManager {
             });
           } else if (type === 'boolean' && tableData.filterValue) {
             this.filteredData = this.filteredData.filter(row => {
-              const value = this.getFieldValue(row, columnDef);
+              const parent = this.filterChilds ? null : this.getRootParent(row);
+              const value = this.getFieldValue(parent || row, columnDef);
               return (value && tableData.filterValue === 'checked') ||
                 (!value && tableData.filterValue === 'unchecked');
             });
           } else if (['date', 'datetime'].includes(type)) {
             this.filteredData = this.filteredData.filter(row => {
-              const value = this.getFieldValue(row, columnDef);
+              const parent = this.filterChilds ? null : this.getRootParent(row);
+              const value = this.getFieldValue(parent || row, columnDef);
 
               const currentDate = value ? new Date(value) : null;
 
@@ -538,7 +555,8 @@ export default class DataManager {
             });
           } else if (type === 'time') {
             this.filteredData = this.filteredData.filter(row => {
-              const value = this.getFieldValue(row, columnDef);
+              const parent = this.filterChilds ? null : this.getRootParent(row);
+              const value = this.getFieldValue(parent || row, columnDef);
               const currentHour = value || null;
 
               if (currentHour) {
@@ -552,7 +570,8 @@ export default class DataManager {
             });
           } else {
             this.filteredData = this.filteredData.filter(row => {
-              const value = this.getFieldValue(row, columnDef);
+              const parent = this.filterChilds ? null : this.getRootParent(row);
+              const value = this.getFieldValue(parent || row, columnDef);
               return value && value.toString().toUpperCase().includes(tableData.filterValue.toUpperCase());
             });
           }
@@ -561,6 +580,29 @@ export default class DataManager {
     }
 
     this.filtered = true;
+  }
+
+  getParent = (row) => {
+    if (this.parentFunc) {
+      return this.parentFunc(row, this.data);
+    }
+    return null;
+  }
+
+  getRootParent = (row) => {
+    if (this.parentFunc) {
+      let result = null;
+      let item = row;
+      while (true) {
+        item = this.parentFunc(item, this.data);
+        if (item) {
+          result = item;
+        } else {
+          return result;
+        }
+      }
+    }
+    return null;
   }
 
   searchData = () => {
@@ -731,7 +773,9 @@ export default class DataManager {
           });
         };
 
-        sortTree(this.sortedData);
+        if (this.sortChilds) {
+          sortTree(this.sortedData);
+        }
       }
     }
     else if (this.isDataType("normal")) {

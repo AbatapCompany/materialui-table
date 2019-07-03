@@ -37,6 +37,17 @@ const sexColumnRender = (data, type) => {
   return data.sex;
 };
 
+const salaryColumnRender = (data, type) => {
+  if (type === 'totals') {
+    const result = data.reduce((state, curr) => {
+      return state + curr.salary;
+    }, 0);
+
+    return result;
+  }
+  return data.salary;
+};
+
 const bigData = [];
 for (let i = 0; i < 1; i++) {
   const d = {
@@ -99,7 +110,7 @@ const App = () => {
       { title: 'Doğum Yeri', field: 'birthCity', lookup: { 34: 'İstanbul', 0: 'Şanlıurfa', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10', 11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19' } },
       { title: 'Kayıt Tarihi', field: 'insertDateTime', type: 'datetime' },
       { title: 'Zaman', field: 'time', type: 'time' },
-      { title: 'Salary, $', field: 'salary', type: 'numeric', aggregation: 'avg', digits: 2 }
+      { title: 'Salary, $', field: 'salary', type: 'numeric', aggregation: 'custom', render: salaryColumnRender, defaultSort: 'desc' }
     ],
     remoteColumns: [
       { title: 'Avatar', field: 'avatar', render: rowData => <img style={{ height: 36, borderRadius: '50%' }} src={rowData.avatar} /> },
@@ -114,7 +125,7 @@ const App = () => {
       setState(Object.assign({...state}, {
         isLoading: false,
         data:  [
-          { id: 1, name: 'A1', surname: 'BSSSSSSSSSSSSSSSSSSSS', isMarried: true, birthDate: new Date(1987, 1, 1), birthCity: 0, sex: 'Male', type: 'adult', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), salary: 1000.001 },
+          { id: 1, name: 'A1', surname: 'BSSSSSSSSSSSSSSSSSSSS', isMarried: true, birthDate: new Date(1987, 1, 1), birthCity: 0, sex: 'Male', type: 'adult', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), salary: 5000.3 },
           { id: 2, name: 'A2', surname: 'B', isMarried: false, birthDate: new Date(1987, 1, 1), birthCity: null, sex: 'Female', type: 'adult', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), salary: 2000.3, parentId: 1 },
           { id: 3, name: 'A3', surname: 'B', isMarried: true, birthDate: new Date(1987, 1, 1), birthCity: 34, sex: 'Female', type: 'child', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), salary: 3000, parentId: 1 },
           { id: 4, name: 'A4', surname: 'C', isMarried: true, birthDate: new Date(1987, 1, 1), birthCity: 34, sex: 'Female', type: 'child', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), salary: 4000, parentId: 3 },
@@ -122,7 +133,7 @@ const App = () => {
           { id: 6, name: 'A6', surname: 'C', isMarried: true, birthDate: new Date(1989, 1, 1), birthCity: 34, sex: 'Female', type: 'child', insertDateTime: new Date(2018, 1, 1, 12, 23, 44), time: new Date(1900, 1, 1, 14, 23, 35), salary: 6000, parentId: 5 },
         ]
       }));
-    }, 1000);
+    }, 100);
   }, []);
 
 
@@ -163,9 +174,13 @@ const App = () => {
                   grouping: true,
                   filtering: true,
                   filterType: filterType,
+                  filterChilds: false,
+                  sortChilds: false,
+                  defaultExpanded: false,
                   fixedColumns: 3,
                   maxBodyHeight: '500px',
                 }}
+                parentChildData={(row, rows) => row.parentId && rows.find((a) => a.id === row.parentId) || null}
               />
             </Grid>
           </Grid>

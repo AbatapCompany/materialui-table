@@ -196,6 +196,7 @@ export interface Options {
   filtering?: boolean;
   filterType?: ('row' | 'header');
   filterCellStyle?: React.CSSProperties;
+  filterChilds?: boolean;
   fixedColumns?: number,
   header?: boolean;
   headerStyle?: React.CSSProperties;
@@ -219,6 +220,7 @@ export interface Options {
   selection?: boolean;
   selectionProps?: any | ((data: any) => any);
   sorting?: boolean;
+  sortChilds?: boolean;
   toolbar?: boolean;
   toolbarButtonAlignment?: 'left' | 'right';
   detailPanelColumnAlignment?: 'left' | 'right';

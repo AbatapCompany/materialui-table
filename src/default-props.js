@@ -77,6 +77,7 @@ export const defaultProps = {
     exportDelimiter: ',',
     filtering: false,
     filterType: 'row',
+    filterChilds: false,
     fixedColumns: 0,
     header: true,
     loadingType: 'overlay',
@@ -96,6 +97,7 @@ export const defaultProps = {
     selection: false,
     selectionProps: {},
     sorting: true,
+    sortChilds: true,
     toolbar: true,
     defaultExpanded: false,
     detailPanelColumnAlignment: 'left'
