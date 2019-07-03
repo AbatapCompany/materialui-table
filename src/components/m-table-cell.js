@@ -123,7 +123,7 @@ export default class MTableCell extends React.Component {
           align={['numeric'].indexOf(this.props.columnDef.type) !== -1 ? "right" : "left"}
           onClick={this.handleClickCell}
       >
-        <span style={{paddingRight: `${padding}px`, display: 'inline-block'}}>
+        <span style={{paddingRight: `${padding}px`}}>
           {this.props.children}
           {this.getRenderValue()}
         </span>
