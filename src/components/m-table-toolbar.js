@@ -55,6 +55,13 @@ export class MTableToolbar extends React.Component {
           val = val.toLocaleString(this.props.datetimeLocaleString);
         } else if (columnDef.type === 'time') {
           val = val.toLocaleTimeString(this.props.datetimeLocaleString);
+        } else {
+          if (val.length) {
+            val = val.replace(/"$/,'""');
+            if (val[0] === '+') {
+              val = '\u200D' + val;
+            }
+          }
         }
         return val;
       })
@@ -100,7 +107,7 @@ export class MTableToolbar extends React.Component {
           }
         }
 
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || value === 'null' || value === 'undefined') {
           value = '';
         }
 
@@ -219,12 +226,13 @@ export class MTableToolbar extends React.Component {
             <Tooltip title={localization.exportTitle}>
               <IconButton
                 color="inherit"
-                onClick={event => this.setState({ exportButtonAnchorEl: event.currentTarget })}
+                onClick={this.exportCsv}
+                // onClick={event => this.setState({ exportButtonAnchorEl: event.currentTarget })}
                 aria-label={localization.exportAriaLabel}>
                 <this.props.icons.Export />
               </IconButton>
             </Tooltip>
-            <Menu
+            {/* <Menu
               anchorEl={this.state.exportButtonAnchorEl}
               open={Boolean(this.state.exportButtonAnchorEl)}
               onClose={() => this.setState({ exportButtonAnchorEl: null })}
@@ -232,7 +240,7 @@ export class MTableToolbar extends React.Component {
               <MenuItem key="export-csv" onClick={this.exportCsv}>
                 {localization.exportName}
               </MenuItem>
-            </Menu>
+            </Menu> */}
           </span>
 
         }
