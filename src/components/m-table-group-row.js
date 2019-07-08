@@ -21,31 +21,38 @@ export default class MTableGroupRow extends React.Component {
     let detail;
     if (this.props.groupData.isExpanded) {
       if (this.props.groups.length > (this.props.level + 1)) { // Is there another group
-        detail = this.props.groupData.groups.map((groupData, index) => (
-          <this.props.components.GroupRow
-            actions={this.props.actions}
-            key={groupData.value || ("" + index)}
-            columns={this.props.columns}
-            components={this.props.components}
-            detailPanel={this.props.detailPanel}
-            getFieldValue={this.props.getFieldValue}
-            groupData={groupData}
-            groups={this.props.groups}
-            icons={this.props.icons}
-            level={this.props.level + 1}
-            path={[...this.props.path, index]}
-            onGroupExpandChanged={this.props.onGroupExpandChanged}
-            onRowSelected={this.props.onRowSelected}
-            onRowClick={this.props.onRowClick}
-            onToggleDetailPanel={this.props.onToggleDetailPanel}
-            onTreeExpandChanged={this.props.onTreeExpandChanged}
-            onEditingCanceled={this.props.onEditingCanceled}
-            onEditingApproved={this.props.onEditingApproved}
-            options={this.props.options}
-            hasAnyEditingRow={this.props.hasAnyEditingRow}
-            isTreeData={this.props.isTreeData}
-          />
-        ));
+        detail = this.props.groupData.groups.map((groupData, index) => {
+          
+          const key = (groupData.path && groupData.path.length > 0)
+            ? groupData.path.reduce((val, item) => (`${val}_${item}`), '')
+            : ("" + index);
+          return (
+            <this.props.components.GroupRow
+              actions={this.props.actions}
+              key={key}
+              columns={this.props.columns}
+              components={this.props.components}
+              detailPanel={this.props.detailPanel}
+              getFieldValue={this.props.getFieldValue}
+              groupData={groupData}
+              groups={this.props.groups}
+              icons={this.props.icons}
+              level={this.props.level + 1}
+              path={[...this.props.path, index]}
+              onGroupExpandChanged={this.props.onGroupExpandChanged}
+              onRowSelected={this.props.onRowSelected}
+              onRowClick={this.props.onRowClick}
+              onToggleDetailPanel={this.props.onToggleDetailPanel}
+              onTreeExpandChanged={this.props.onTreeExpandChanged}
+              onEditingCanceled={this.props.onEditingCanceled}
+              onEditingApproved={this.props.onEditingApproved}
+              options={this.props.options}
+              localization={this.props.localization}
+              hasAnyEditingRow={this.props.hasAnyEditingRow}
+              isTreeData={this.props.isTreeData}
+            />
+          );
+        });
       }
       else {
         detail = this.props.groupData.data.map((rowData, index) => {
@@ -56,7 +63,7 @@ export default class MTableGroupRow extends React.Component {
                 components={this.props.components}
                 data={rowData}
                 icons={this.props.icons}
-                // localization={{ ...MTableBody.defaultProps.localization.editRow, ...this.props.localization.editRow }}
+                localization={this.props.localization}
                 key={index}
                 mode={rowData.tableData.editing}
                 options={this.props.options}
@@ -164,5 +171,6 @@ MTableGroupRow.propTypes = {
   onEditingCanceled: PropTypes.func,
   onEditingApproved: PropTypes.func,
   options: PropTypes.object,
+  localization: PropTypes.object,
   path: PropTypes.arrayOf(PropTypes.number),
 };

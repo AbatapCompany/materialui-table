@@ -108,6 +108,7 @@ class MTableBody extends React.Component {
         onToggleDetailPanel={this.props.onToggleDetailPanel}
         onTreeExpandChanged={this.props.onTreeExpandChanged}
         options={this.props.options}
+        localization={{ ...MTableBody.defaultProps.localization.editRow, ...this.props.localization.editRow }}
         isTreeData={this.props.isTreeData}
         hasAnyEditingRow={this.props.hasAnyEditingRow}
       />
