@@ -91,13 +91,17 @@ export class MTableToolbar extends React.Component {
           }
           if(this.props.exportNumericDecimalSeparator
             && this.props.exportNumericDecimalSeparator !== '.') {
-              value = `${value}`.replace(/[.]/g, this.props.exportNumericDecimalSeparator);
-            }
+            value = `${value}`.replace(/[.]/g, this.props.exportNumericDecimalSeparator);
+          }
+
+          if (this.props.exportNumericNullToZero
+            && (value === null || value === undefined || value === '')) {
+            value = 0;
+          }
         }
 
-        if (this.props.exportNumericNullToZero
-          && (value === null || value === undefined || value === '')) {
-          value = 0;
+        if (value === null || value === undefined) {
+          value = '';
         }
 
         return value;
