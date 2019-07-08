@@ -166,8 +166,12 @@ export default class MaterialTable extends React.Component {
   }
 
   onChangeGroupOrder = (groupedColumn) => {
-    this.dataManager.changeGroupOrder(groupedColumn.tableData.id);
+    const groupedResult = this.dataManager.changeGroupOrder(groupedColumn.tableData.id);
     this.setState(this.dataManager.getRenderState());
+
+    if (groupedResult !== undefined && this.props.onChangeColumnGroups) {
+      this.props.onChangeColumnGroups(groupedResult);
+    }
   }
 
   onChangeOrder = (orderBy, orderDirection) => {
@@ -231,7 +235,7 @@ export default class MaterialTable extends React.Component {
       return;
     }
 
-    this.dataManager.changeByDrag(result);
+    const groupedResult = this.dataManager.changeByDrag(result);
     this.setState(this.dataManager.getRenderState());
 
     if (result && result.destination && result.destination.droppableId === 'headers'
@@ -240,6 +244,10 @@ export default class MaterialTable extends React.Component {
         this.props.onChangeColumnOrder(this.state.columns.sort((a, b) =>
           (a.tableData.columnOrder > b.tableData.columnOrder) ? 1 : -1));
         
+    }
+
+    if (groupedResult !== undefined && this.props.onChangeColumnGroups) {
+      this.props.onChangeColumnGroups(groupedResult);
     }
   }
 
@@ -258,8 +266,11 @@ export default class MaterialTable extends React.Component {
       source: { index, droppableId: "groups" },
       type: "DEFAULT"
     };
-    this.dataManager.changeByDrag(result);
+    const groupedResult = this.dataManager.changeByDrag(result);
     this.setState(this.dataManager.getRenderState());
+    if (groupedResult !== undefined && this.props.onChangeColumnGroups) {
+      this.props.onChangeColumnGroups(groupedResult);
+    }
   }
 
   onEditingApproved = (mode, newData, oldData) => {

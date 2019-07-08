@@ -236,6 +236,18 @@ export default class DataManager {
     }
 
     this.sorted = false;
+
+    const groupedResult = this.columns
+      .filter(col => col.tableData.groupOrder > -1)
+      .sort((col1, col2) => col1.tableData.groupOrder - col2.tableData.groupOrder)
+      .map(item => ({
+        id: item.tableData.id,
+        field: item.field,
+        groupOrder: item.tableData.groupOrder,
+        groupSort: item.tableData.groupSort,
+      }));
+
+    return groupedResult;
   }
 
   changeColumnHidden(columnId, hidden) {
@@ -333,7 +345,16 @@ export default class DataManager {
       groups[i].tableData.groupOrder = start + i;
     }
 
+    const groupedResult = groups.map(item => ({
+      id: item.tableData.id,
+      field: item.field,
+      groupOrder: item.tableData.groupOrder,
+      groupSort: item.tableData.groupSort,
+    }));
+
     this.sorted = this.grouped = false;
+
+    return groupedResult;
   }
 
   findDataByPath = (renderData, path) => {

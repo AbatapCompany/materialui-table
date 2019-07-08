@@ -366,6 +366,7 @@ const App = () => {
               fixedColumns: 1,
               grouping: true,
             }}
+            onChangeColumnGroups={(items) => {console.log('onChangeColumnGroups', items)} }
           />
         </div>
       </MuiThemeProvider>

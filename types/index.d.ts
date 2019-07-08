@@ -32,6 +32,12 @@ export interface MaterialTableProps {
   tableRef?: any;
   onChangeColumnOrder?: (columns: Column[]) => void;
   onChangeColumnHidden?: (columnId: number, hidden: boolean, columns: Column[]) => void;
+  onChangeColumnGroups?: (groups: {
+    field: string;
+    groupOrder: any;
+    groupSort: string;
+    id: number;
+  }[]) => void;
 }
 
 export interface Filter {
