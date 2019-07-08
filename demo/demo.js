@@ -364,6 +364,7 @@ const App = () => {
               addRowPosition: state.actionsAlign === 'left' ? '' : 'last',
               aggregation: true,
               fixedColumns: 1,
+              grouping: true,
             }}
           />
         </div>
