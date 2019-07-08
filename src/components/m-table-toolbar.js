@@ -56,7 +56,7 @@ export class MTableToolbar extends React.Component {
         } else if (columnDef.type === 'time') {
           val = val.toLocaleTimeString(this.props.datetimeLocaleString);
         } else {
-          if (val.length) {
+          if (val.length && val.replace) {
             val = val.replace(/"$/,'""');
             if (val[0] === '+') {
               val = '\u200D' + val;
