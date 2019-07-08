@@ -21,7 +21,8 @@ export class MTableToolbar extends React.Component {
     const columns = this.props.columns
       .filter(columnDef => {
         return !columnDef.hidden && columnDef.field && columnDef.export !== false;
-      });
+      })
+      .sort((a, b) => a.tableData.columnOrder - b.tableData.columnOrder);
 
     const dataToExport = this.props.exportAllData ? this.props.data : this.props.renderData;
 
@@ -29,6 +30,17 @@ export class MTableToolbar extends React.Component {
       columns.map(columnDef => {
         let val = this.props.getFieldValue(rowData, columnDef);
         if (columnDef.type === 'numeric') {
+          if (columnDef.digits !== undefined) {
+            let normalizedValue = (val && val.toFixed) ? val.toFixed(columnDef.digits) : null;
+
+            if (normalizedValue && normalizedValue.indexOf('.') !== -1) {
+              normalizedValue = normalizedValue.replace(/[0]+$/, '').replace(/[.]+$/, '');
+            }
+
+            val = (normalizedValue === null) ? val : normalizedValue;
+          }
+          
+
           if (this.props.exportNumericNullToZero
             && (val === null || val === undefined || val === '')) {
             val = 0;
@@ -49,10 +61,24 @@ export class MTableToolbar extends React.Component {
     );
 
     if (this.props.exportTotals && this.props.getAggregation) {
-      const totalsRow = this.props.columns.filter(columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1))
-      .sort((a, b) => a.tableData.columnOrder - b.tableData.columnOrder)
+      const totalsRow = columns
       .map((columnDef, index) => {
         let value = this.props.getAggregation(dataToExport, columnDef);
+        if (columnDef.type === 'numeric') {
+          if (columnDef.digits !== undefined) {
+            let normalizedValue = (value && value.toFixed) ? value.toFixed(columnDef.digits) : null;
+
+            if (normalizedValue && normalizedValue.indexOf('.') !== -1) {
+              normalizedValue = normalizedValue.replace(/[0]+$/, '').replace(/[.]+$/, '');
+            }
+
+            value = (normalizedValue === null) ? value : normalizedValue;
+          }
+          if(this.props.exportNumericDecimalSeparator
+            && this.props.exportNumericDecimalSeparator !== '.') {
+              value = `${value}`.replace(/[.]/g, this.props.exportNumericDecimalSeparator);
+            }
+        }
         if (typeof value === 'object') {
           if (value instanceof Date) {
             if (columnDef.type === 'date') {

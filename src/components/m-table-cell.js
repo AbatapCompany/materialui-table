@@ -46,12 +46,19 @@ export default class MTableCell extends React.Component {
       return this.getCurrencyValue(this.props.columnDef.currencySetting, this.props.value);
     } else if (this.props.columnDef.type === 'numeric') {
       if (this.props.columnDef.digits !== undefined) {
-        return this.props.value
-          && this.props.value
+
+        let normalizedValue = (this.props.value && this.props.value.toFixed)
+          ? this.props.value
             .toFixed(this.props.columnDef.digits)
+          : null;
+
+        if (normalizedValue && normalizedValue.indexOf('.') !== -1) {
+          normalizedValue = normalizedValue
             .replace(/[0]+$/, '')
-            .replace(/[.]+$/, '')
-          || this.props.value;
+            .replace(/[.]+$/, '');
+        }
+
+        return (normalizedValue === null) ? this.props.value : normalizedValue;
       }
 
       return this.props.value;
@@ -105,7 +112,8 @@ export default class MTableCell extends React.Component {
   }
 
   render() {
-    const { icons, columnDef, rowData, isFixed, value, sorting, headerFiltering, isTotals, ...cellProps } = this.props;
+    const { icons, columnDef, rowData, isFixed, value, sorting, headerFiltering, isTotals,
+      datetimeLocaleString, ...cellProps } = this.props;
     let padding = 0;
 
     if (this.props.columnDef.type === 'numeric') {
