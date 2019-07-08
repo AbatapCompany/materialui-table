@@ -183,6 +183,7 @@ export interface Options {
   addRowPosition?: ('first' | 'last');
   aggregation?: boolean;
   columnsButton?: boolean;
+  datetimeLocaleString?: string;
   defaultExpanded?: boolean;
   debounceInterval?: number;
   detailPanelType?: ('single' | 'multiple');
@@ -192,6 +193,9 @@ export interface Options {
   exportButton?: boolean;
   exportDelimiter?: string;
   exportFileName?: string;
+  exportNumericDecimalSeparator?: string,
+  exportNumericNullToZero?: boolean,
+  exportTotals?: boolean,
   exportCsv?: (columns: any[], renderData: any[]) => void;
   filtering?: boolean;
   filterType?: ('row' | 'header');

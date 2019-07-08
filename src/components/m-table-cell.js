@@ -26,19 +26,19 @@ export default class MTableCell extends React.Component {
       }
     } else if (this.props.columnDef.type === 'date') {
       if (this.props.value instanceof Date) {
-        return this.props.value.toLocaleDateString();
+        return this.props.value.toLocaleDateString(this.props.datetimeLocaleString);
       } else {
         return this.props.value;
       }
     } else if (this.props.columnDef.type === 'time') {
       if (this.props.value instanceof Date) {
-        return this.props.value.toLocaleTimeString();
+        return this.props.value.toLocaleTimeString(this.props.datetimeLocaleString);
       } else {
         return this.props.value;
       }
     } else if (this.props.columnDef.type === 'datetime') {
       if (this.props.value instanceof Date) {
-        return this.props.value.toLocaleString();
+        return this.props.value.toLocaleString(this.props.datetimeLocaleString);
       } else {
         return this.props.value;
       }
@@ -147,4 +147,5 @@ MTableCell.propTypes = {
   sorting: PropTypes.bool.isRequired,
   headerFiltering: PropTypes.bool.isRequired,
   isTotals: PropTypes.bool,
+  datetimeLocaleString: PropTypes.string,
 };

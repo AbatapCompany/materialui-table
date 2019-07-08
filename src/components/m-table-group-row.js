@@ -90,6 +90,7 @@ export default class MTableGroupRow extends React.Component {
           {freeCells}
           <this.props.components.Cell
             isFixed={!!this.props.options.fixedColumns}
+            datetimeLocaleString={this.props.options.datetimeLocaleString}
             colSpan={colSpan} 
             padding="none" 
             columnDef={column} 

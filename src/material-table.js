@@ -555,10 +555,17 @@ export default class MaterialTable extends React.Component {
               columns={this.state.columns}
               columnsButton={props.options.columnsButton}
               icons={props.icons}
+              datetimeLocaleString={props.options.datetimeLocaleString}
               exportAllData={props.options.exportAllData}
               exportButton={props.options.exportButton}
               exportDelimiter={props.options.exportDelimiter}
               exportFileName={props.options.exportFileName}
+              exportNumericDecimalSeparator={props.options.exportNumericDecimalSeparator}
+              exportNumericNullToZero={props.options.exportNumericNullToZero}
+              exportTotals={props.options.exportTotals}
+              getAggregation={this.props.options.aggregation
+                ? this.dataManager.getAggregation
+                : null}
               exportCsv={props.options.exportCsv}
               getFieldValue={this.dataManager.getFieldValue}
               data={this.state.data}

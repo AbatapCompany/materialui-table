@@ -15,6 +15,7 @@ class MTableTotalsRow extends React.Component {
           : <this.props.components.Cell
               icons={this.props.icons}
               isFixed={index < this.props.options.fixedColumns}
+              datetimeLocaleString={this.props.options.datetimeLocaleString}
               isTotals
               columnDef={columnDef}
               value={value}

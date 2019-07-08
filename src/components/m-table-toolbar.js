@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import ReactDOMServer from 'react-dom/server';
 import { Checkbox, FormControlLabel, Icon, IconButton, InputAdornment, Menu, MenuItem, TextField, Toolbar, Tooltip, Typography, withStyles } from '@material-ui/core';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import classNames from 'classnames';
@@ -26,14 +27,61 @@ export class MTableToolbar extends React.Component {
 
     const data = dataToExport.map(rowData =>
       columns.map(columnDef => {
-        return this.props.getFieldValue(rowData, columnDef);
+        let val = this.props.getFieldValue(rowData, columnDef);
+        if (columnDef.type === 'numeric') {
+          if (this.props.exportNumericNullToZero
+            && (val === null || val === undefined || val === '')) {
+            val = 0;
+          }
+          if(this.props.exportNumericDecimalSeparator
+          && this.props.exportNumericDecimalSeparator !== '.') {
+            val = `${val}`.replace(/[.]/g, this.props.exportNumericDecimalSeparator);
+          }
+        } else if (columnDef.type === 'date') {
+          val = val.toLocaleDateString(this.props.datetimeLocaleString);
+        } else if (columnDef.type === 'datetime') {
+          val = val.toLocaleString(this.props.datetimeLocaleString);
+        } else if (columnDef.type === 'time') {
+          val = val.toLocaleTimeString(this.props.datetimeLocaleString);
+        }
+        return val;
       })
     );
+
+    if (this.props.exportTotals && this.props.getAggregation) {
+      const totalsRow = this.props.columns.filter(columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1))
+      .sort((a, b) => a.tableData.columnOrder - b.tableData.columnOrder)
+      .map((columnDef, index) => {
+        let value = this.props.getAggregation(dataToExport, columnDef);
+        if (typeof value === 'object') {
+          if (value instanceof Date) {
+            if (columnDef.type === 'date') {
+              value = value.toLocaleDateString(this.props.datetimeLocaleString);
+            } else if (columnDef.type === 'time') {
+              value = value.toLocaleTimeString(this.props.datetimeLocaleString);
+            } else {
+              value = value.toLocaleString(this.props.datetimeLocaleString);
+            } 
+          } else {
+            value = ReactDOMServer.renderToStaticMarkup(value).replace(/<[^>]+>/g, '');
+          }
+        }
+
+        return value;
+      });
+
+      data.push(totalsRow);
+    }
 
     const builder = new CsvBuilder((this.props.exportFileName || this.props.title || 'data') + '.csv');
     builder
       .setDelimeter(this.props.exportDelimiter)
-      .setColumns(columns.map(columnDef => columnDef.title))
+      .setColumns(columns.map(columnDef => {
+        if (typeof columnDef.title === 'string') {
+          return columnDef.title;
+        }
+        return ReactDOMServer.renderToStaticMarkup(columnDef.title).replace(/<[^>]+>/g, '');
+      }))
       .addRows(data)
       .exportFile();
   }
@@ -247,8 +295,13 @@ MTableToolbar.propTypes = {
   exportButton: PropTypes.bool,
   exportDelimiter: PropTypes.string,
   exportFileName: PropTypes.string,
+  exportNumericDecimalSeparator: PropTypes.string,
+  exportNumericNullToZero: PropTypes.bool,
+  exportTotals: PropTypes.bool,
+  getAggregation: PropTypes.func,
   exportCsv: PropTypes.func,
-  classes: PropTypes.object
+  classes: PropTypes.object,
+  datetimeLocaleString: PropTypes.string,
 };
 
 export const styles = theme => ({
