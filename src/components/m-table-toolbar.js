@@ -29,7 +29,7 @@ export class MTableToolbar extends React.Component {
     const data = dataToExport.map(rowData =>
       columns.map(columnDef => {
         let val = this.props.getFieldValue(rowData, columnDef);
-        if (columnDef.type === 'numeric') {
+        if (columnDef.type === 'numeric' || typeof val === 'number') {
           if (columnDef.digits !== undefined) {
             let normalizedValue = (val && val.toFixed) ? val.toFixed(columnDef.digits) : null;
 
@@ -64,21 +64,7 @@ export class MTableToolbar extends React.Component {
       const totalsRow = columns
       .map((columnDef, index) => {
         let value = this.props.getAggregation(dataToExport, columnDef);
-        if (columnDef.type === 'numeric') {
-          if (columnDef.digits !== undefined) {
-            let normalizedValue = (value && value.toFixed) ? value.toFixed(columnDef.digits) : null;
 
-            if (normalizedValue && normalizedValue.indexOf('.') !== -1) {
-              normalizedValue = normalizedValue.replace(/[0]+$/, '').replace(/[.]+$/, '');
-            }
-
-            value = (normalizedValue === null) ? value : normalizedValue;
-          }
-          if(this.props.exportNumericDecimalSeparator
-            && this.props.exportNumericDecimalSeparator !== '.') {
-              value = `${value}`.replace(/[.]/g, this.props.exportNumericDecimalSeparator);
-            }
-        }
         if (typeof value === 'object') {
           if (value instanceof Date) {
             if (columnDef.type === 'date') {
@@ -91,6 +77,27 @@ export class MTableToolbar extends React.Component {
           } else {
             value = ReactDOMServer.renderToStaticMarkup(value).replace(/<[^>]+>/g, '');
           }
+        }
+
+        if (columnDef.type === 'numeric') {
+          if (columnDef.digits !== undefined) {
+            let normalizedValue = (+value && +value.toFixed) ? +value.toFixed(columnDef.digits) : null;
+
+            if (normalizedValue && normalizedValue.indexOf('.') !== -1) {
+              normalizedValue = normalizedValue.replace(/[0]+$/, '').replace(/[.]+$/, '');
+            }
+
+            value = (normalizedValue === null) ? value : normalizedValue;
+          }
+          if(this.props.exportNumericDecimalSeparator
+            && this.props.exportNumericDecimalSeparator !== '.') {
+              value = `${value}`.replace(/[.]/g, this.props.exportNumericDecimalSeparator);
+            }
+        }
+
+        if (this.props.exportNumericNullToZero
+          && (value === null || value === undefined || value === '')) {
+          value = 0;
         }
 
         return value;
