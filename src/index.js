@@ -24,11 +24,12 @@ const styles = theme => ({
   '@global': {
     '.MuiTableCell-body.cell-fixed': {
       backgroundColor: theme.palette.background.paper,
-      position: 'relative',
+      position: 'sticky',
       zIndex: 1
     },
     '.MuiTableCell-head.cell-fixed, .MuiTableCell-footer.cell-fixed': {
-      zIndex: 11
+      zIndex: 11,
+      position: 'sticky',
     },
     'tfoot.MuiTableFooter-root td': {
       border: 'none'

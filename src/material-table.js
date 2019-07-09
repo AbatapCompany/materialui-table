@@ -681,7 +681,7 @@ const ScrollBar = ({ double, children, tableId }) => {
       for(let i = 0; i < firtRowChildren.length; ++i) {
         const item = firtRowChildren[i];
         if (item.className.indexOf('cell-fixed') !== -1) {
-          style += `#${tableId} .cell-fixed:nth-child(${i + 1}) { position: sticky; left: ${left}px; } `;
+          style += `#${tableId} .cell-fixed:nth-child(${i + 1}) { left: ${left}px; } `;
           left += item.offsetWidth;
         }
       }
