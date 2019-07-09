@@ -58,7 +58,7 @@ export class MTableToolbar extends React.Component {
         } else {
           if (val && val.length && val.replace) {
             val = val.replace(/"$/,'""');
-            if (val[0] === '+') {
+            if (val[0] === '+' || val[0] === '-') {
               val = '\u200D' + val;
             }
           }
@@ -88,7 +88,7 @@ export class MTableToolbar extends React.Component {
 
         if (columnDef.type === 'numeric') {
           if (columnDef.digits !== undefined) {
-            let normalizedValue = (+value && +value.toFixed) ? +value.toFixed(columnDef.digits) : null;
+            let normalizedValue = (+value && (+value).toFixed) ? (+value).toFixed(columnDef.digits) : null;
 
             if (normalizedValue && normalizedValue.indexOf('.') !== -1) {
               normalizedValue = normalizedValue.replace(/[0]+$/, '').replace(/[.]+$/, '');
