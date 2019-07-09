@@ -389,21 +389,32 @@ export default class DataManager {
   }
 
   findGroupByGroupPath(renderData, path) {
-    const data = { groups: renderData, groupsIndex: this.rootGroupsIndex };
-
-    const node = path.reduce((result, current) => {
-      if (!result) {
+    let currentGroups = renderData;
+    let result = undefined;
+    path.forEach(pathItem => {
+      result = currentGroups.find(group => group.value === pathItem);
+      if (result) {
+        currentGroups = result.groups;
+      } else {
         return undefined;
       }
+    });
 
-      if (result.groupsIndex[current] !== undefined) {
-        return result.groups[result.groupsIndex[current]];
-      }
-      return undefined;
-      // const group = result.groups.find(a => a.value === current);
-      // return group;
-    }, data);
-    return node;
+    // const node = { groups: renderData, groupsIndex: this.rootGroupsIndex };
+
+    // const node = path.reduce((result, current) => {
+    //   if (!result) {
+    //     return undefined;
+    //   }
+
+    //   if (result.groupsIndex[current] !== undefined) {
+    //     return result.groups[result.groupsIndex[current]];
+    //   }
+    //   return undefined;
+    //   // const group = result.groups.find(a => a.value === current);
+    //   // return group;
+    // }, data);
+    return result;
   }
 
   getFieldValue = (rowData, columnDef, lookup = true) => {
@@ -665,16 +676,13 @@ export default class DataManager {
       let object = result;
       object = groups.reduce((o, colDef) => {
         const value = currentRow[colDef.field] || byString(currentRow, colDef.field);
-
         let group;
         if (o.groupsIndex[value] !== undefined) {
           group = o.groups[o.groupsIndex[value]];
         }
-
         if (!group) {
           const path = [...(o.path || []), value];
           let oldGroup = this.findGroupByGroupPath(this.groupedData, path) || { isExpanded: (this.defaultExpanded ? true : false) };
-
           group = { value, groups: [], groupsIndex: {}, data: [], isExpanded: oldGroup.isExpanded, path: path };
           o.groups.push(group);
           o.groupsIndex[value] = o.groups.length - 1;
