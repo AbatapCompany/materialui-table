@@ -421,6 +421,15 @@ export default class MaterialTable extends React.Component {
     else {
       this.setState(this.dataManager.getRenderState());
     }
+
+    if (this.props.onChangeFilter) {
+      this.props.onChangeFilter(this.state.columns
+        .filter(item => item.tableData.filterValue !== null && item.tableData.filterValue !== undefined)
+        .map(item => ({
+          field: item.field,
+          filterValue: item.tableData.filterValue,
+        })));
+    }
   }, this.props.options.debounceInterval)
 
   onTreeExpandChanged = (path, data) => {

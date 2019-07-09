@@ -194,6 +194,7 @@ const App = () => {
                   datetimeLocaleString: 'ru-RU',
                 }}
                 parentChildData={(row, rows) => row.parentId && rows.find((a) => a.id === row.parentId) || null}
+                onChangeFilter={(items) => {console.log('onChangeFilter', items)} }
               />
             </Grid>
           </Grid>

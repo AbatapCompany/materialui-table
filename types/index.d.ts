@@ -30,14 +30,17 @@ export interface MaterialTableProps {
   onTreeExpandChange?: (data: any, isExpanded: boolean) => void;
   style?: React.CSSProperties;
   tableRef?: any;
-  onChangeColumnOrder?: (columns: Column[]) => void;
-  onChangeColumnHidden?: (columnId: number, hidden: boolean, columns: Column[]) => void;
   onChangeColumnGroups?: (groups: {
     field: string;
     groupOrder: any;
     groupSort: string;
-    id: number;
   }[]) => void;
+  onChangeFilter?: (filters: {
+    field: string;
+    filterValue: any;
+  }[]) => void;
+  onChangeColumnOrder?: (columns: Column[]) => void;
+  onChangeColumnHidden?: (columnId: number, hidden: boolean, columns: Column[]) => void;
 }
 
 export interface Filter {

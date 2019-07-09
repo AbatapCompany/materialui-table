@@ -241,7 +241,6 @@ export default class DataManager {
       .filter(col => col.tableData.groupOrder > -1)
       .sort((col1, col2) => col1.tableData.groupOrder - col2.tableData.groupOrder)
       .map(item => ({
-        id: item.tableData.id,
         field: item.field,
         groupOrder: item.tableData.groupOrder,
         groupSort: item.tableData.groupSort,
@@ -346,7 +345,6 @@ export default class DataManager {
     }
 
     const groupedResult = groups.map(item => ({
-      id: item.tableData.id,
       field: item.field,
       groupOrder: item.tableData.groupOrder,
       groupSort: item.tableData.groupSort,
