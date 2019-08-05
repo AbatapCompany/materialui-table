@@ -116,6 +116,7 @@ export const propTypes = {
     debounceInterval: PropTypes.number,
     detailPanelType: PropTypes.oneOf(['single', 'multiple']),
     doubleHorizontalScroll: PropTypes.bool,
+    draggableHeader: PropTypes.bool,
     emptyRowsWhenPaging: PropTypes.bool,
     exportAllData: PropTypes.bool,
     exportButton: PropTypes.bool,

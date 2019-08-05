@@ -16,7 +16,7 @@ export class MTableHeader extends React.Component {
         let content = (
           <Draggable
             key={columnDef.tableData.id}
-            isDragDisabled={index < this.props.fixedColumns}
+            isDragDisabled={!this.props.draggableHeader || index < this.props.fixedColumns}
             draggableId={columnDef.tableData.id.toString()}
             index={index}>
             {(provided, snapshot) => (
@@ -218,6 +218,7 @@ MTableHeader.defaultProps = {
 MTableHeader.propTypes = {
   columns: PropTypes.array.isRequired,
   dataCount: PropTypes.number,
+  draggableHeader: PropTypes.bool.isRequired,
   hasDetailPanel: PropTypes.bool.isRequired,
   detailPanelColumnAlignment: PropTypes.string,
   hasSelection: PropTypes.bool,

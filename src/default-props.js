@@ -71,6 +71,7 @@ export const defaultProps = {
     detailPanelType: 'multiple',
     debounceInterval: 200,
     doubleHorizontalScroll: false,
+    draggableHeader: true,
     emptyRowsWhenPaging: true,
     exportAllData: false,
     exportButton: false,

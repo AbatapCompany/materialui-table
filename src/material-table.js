@@ -492,6 +492,7 @@ export default class MaterialTable extends React.Component {
         <props.components.Header
           localization={{ ...MaterialTable.defaultProps.localization.header, ...this.props.localization.header, ...this.props.localization.filter }}
           columns={this.state.columns}
+          draggableHeader={props.options.draggableHeader}
           hasSelection={props.options.selection}
           headerStyle={props.options.headerStyle}
           selectedCount={this.state.selectedCount}
