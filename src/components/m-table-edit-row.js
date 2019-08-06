@@ -72,6 +72,9 @@ export default class MTableEditRow extends React.Component {
                 rowData={this.state.data}
                 onChange={value => {
                   const data = { ...this.state.data };
+                  if (value && cellProps.type === 'numeric' && !isNaN(value)) {
+                    value = +value;
+                  }
                   setByString(data, columnDef.field, value);
                   // data[columnDef.field] = value;
                   this.setState({ data });
