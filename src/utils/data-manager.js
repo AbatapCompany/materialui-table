@@ -2,6 +2,7 @@ import formatDate from 'date-fns/format';
 import { byString } from './';
 
 export default class DataManager {
+  aggregateChilds = true;
   applyFilters = false;
   applySearch = false;
   currentPage = 0;
@@ -74,6 +75,10 @@ export default class DataManager {
 
   setDefaultExpanded(expanded) {
     this.defaultExpanded = expanded;
+  }
+
+  setAggregateChilds(aggregateChilds) {
+    this.aggregateChilds = aggregateChilds;
   }
 
   setFilterChilds(filterChilds) {
@@ -829,30 +834,34 @@ export default class DataManager {
   }
 
   getAggregation = (data, columnDef, lookup = true) => {
+    const filteredData = this.aggregateChilds
+      ? data
+      : data.filter(item => !this.getParent(item));
+
     switch (columnDef.aggregation) {
       case 'sum':
-        return data
+        return filteredData
           .map(x => this.getFieldValue(x, columnDef, lookup))
           .reduce((prev, curr) => prev + curr, 0);
       case 'max':
-          return data
+          return filteredData
             .map(x => this.getFieldValue(x, columnDef, lookup))
             .reduce((prev, curr) => curr > prev ? curr : prev, Number.MIN_SAFE_INTEGER);
       case 'min':
-          return data
+          return filteredData
             .map(x => this.getFieldValue(x, columnDef, lookup))
             .reduce((prev, curr) => curr < prev ? curr : prev, Number.MAX_SAFE_INTEGER);
       case 'count':
-          return data
+          return filteredData
             .map(x => this.getFieldValue(x, columnDef, lookup))
             .length;
       case 'avg': {
-          const items = data
+          const items = filteredData
             .map(x => this.getFieldValue(x, columnDef, lookup));
           return items.reduce((prev, curr) => prev + curr, 0) / items.length;
       }
       case 'custom':
-        return columnDef.render && columnDef.render(data, 'totals');
+        return columnDef.render && columnDef.render(filteredData, 'totals');
       default:
         return undefined;
     }

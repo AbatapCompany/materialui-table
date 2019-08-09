@@ -176,6 +176,7 @@ const App = () => {
                 }}
                 options={{
                   aggregation: true,
+                  aggregateChilds: false,
                   columnsButton: true,
                   selection: true,
                   grouping: true,

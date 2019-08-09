@@ -190,6 +190,7 @@ export interface Options {
   actionsCellStyle?: React.CSSProperties;
   actionsColumnIndex?: number;
   addRowPosition?: ('first' | 'last');
+  aggregateChilds?: boolean;
   aggregation?: boolean;
   columnsButton?: boolean;
   datetimeLocaleString?: string;

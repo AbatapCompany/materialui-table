@@ -67,6 +67,7 @@ export const defaultProps = {
   options: {
     actionsColumnIndex: 0,
     addRowPosition: 'last',
+    aggregateChilds: true,
     columnsButton: false,
     detailPanelType: 'multiple',
     debounceInterval: 200,

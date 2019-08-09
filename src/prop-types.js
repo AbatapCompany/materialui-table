@@ -109,6 +109,7 @@ export const propTypes = {
     actionsCellStyle: PropTypes.object,
     actionsColumnIndex: PropTypes.number,
     addRowPosition: PropTypes.oneOf(['first', 'last']),
+    aggregateChilds: PropTypes.bool,
     aggregation: PropTypes.bool,
     columnsButton: PropTypes.bool,
     datetimeLocaleString: PropTypes.string,
