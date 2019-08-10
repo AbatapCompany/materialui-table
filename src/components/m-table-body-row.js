@@ -13,6 +13,7 @@ export default class MTableBodyRow extends React.Component {
         const value = this.props.getFieldValue(this.props.data, columnDef);
         return (
           <this.props.components.Cell
+            strictDigits={this.props.options.strictDigits}
             icons={this.props.icons}
             isFixed={index < this.props.options.fixedColumns}
             columnDef={columnDef}

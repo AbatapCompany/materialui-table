@@ -52,7 +52,13 @@ export default class MTableCell extends React.Component {
             .toFixed(this.props.columnDef.digits)
           : null;
 
-        if (normalizedValue && normalizedValue.indexOf('.') !== -1) {
+        const strictDigits = (this.props.columnDef.strictDigits !== undefined)
+          ? this.props.columnDef.strictDigits
+          : this.props.strictDigits;
+
+        if (normalizedValue
+          && normalizedValue.indexOf('.') !== -1
+          && !strictDigits) {
           normalizedValue = normalizedValue
             .replace(/[0]+$/, '')
             .replace(/[.]+$/, '');
@@ -153,6 +159,7 @@ MTableCell.propTypes = {
   rowData: PropTypes.object,
   isFixed: PropTypes.bool,
   sorting: PropTypes.bool.isRequired,
+  strictDigits: PropTypes.bool,
   headerFiltering: PropTypes.bool.isRequired,
   isTotals: PropTypes.bool,
   datetimeLocaleString: PropTypes.string,

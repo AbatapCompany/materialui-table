@@ -44,6 +44,7 @@ export default class MTableEditRow extends React.Component {
         if (!columnDef.field || !allowEditing) {
           return (
             <this.props.components.Cell
+              strictDigits={this.props.options.strictDigits}
               icons={this.props.icons}
               columnDef={columnDef}
               value={value}

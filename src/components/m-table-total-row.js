@@ -13,6 +13,7 @@ class MTableTotalsRow extends React.Component {
         return value === undefined
           ? <TableCell key={`cell-total-${columnDef.tableData.id}`} className={cellClassName}>{value}</TableCell>
           : <this.props.components.Cell
+              strictDigits={this.props.options.strictDigits}
               icons={this.props.icons}
               isFixed={index < this.props.options.fixedColumns}
               datetimeLocaleString={this.props.options.datetimeLocaleString}

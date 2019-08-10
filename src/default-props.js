@@ -100,6 +100,7 @@ export const defaultProps = {
     selectionProps: {},
     sorting: true,
     sortChilds: true,
+    strictDigits: false,
     toolbar: true,
     defaultExpanded: false,
     detailPanelColumnAlignment: 'left'

@@ -112,6 +112,7 @@ export interface Column {
   defaultSort?: ('asc' | 'desc');
   digits?: number;
   disableClick?: boolean;
+  editable?: ('always' | 'onUpdate' | 'onAdd' | 'never');
   editComponent?: ((props: EditComponentProps) => React.ReactElement<any>);
   emptyValue?: string | React.ReactElement<any> | ((data: any) => React.ReactElement<any> | string);
   export?: boolean;
@@ -122,11 +123,11 @@ export interface Column {
   headerStyle?: React.CSSProperties;
   hidden?: boolean;
   lookup?: object;
-  editable?: ('always' | 'onUpdate' | 'onAdd' | 'never');
   removable?: boolean;
   render?: (data: any, type: ('row' | 'group' | 'totals')) => any;
   searchable?: boolean;
   sorting?: boolean;
+  strictDigits?: boolean;
   title?: string | React.ReactElement<any>;
   type?: ('string' | 'boolean' | 'numeric' | 'date' | 'datetime' | 'time' | 'currency');
 }
@@ -236,6 +237,7 @@ export interface Options {
   selectionProps?: any | ((data: any) => any);
   sorting?: boolean;
   sortChilds?: boolean;
+  strictDigits?: boolean;
   toolbar?: boolean;
   toolbarButtonAlignment?: 'left' | 'right';
   detailPanelColumnAlignment?: 'left' | 'right';

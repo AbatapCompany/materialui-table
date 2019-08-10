@@ -117,6 +117,7 @@ export default class MTableGroupRow extends React.Component {
         <TableRow>
           {freeCells}
           <this.props.components.Cell
+            strictDigits={this.props.options.strictDigits}
             isFixed={!!this.props.options.fixedColumns}
             datetimeLocaleString={this.props.options.datetimeLocaleString}
             colSpan={colSpan} 
