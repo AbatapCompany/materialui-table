@@ -369,6 +369,13 @@ const App = () => {
               aggregation: true,
               fixedColumns: 1,
               grouping: true,
+              rowStyle: (data, index) => {
+                if (data.sex === 'Male') {
+                  return {
+                    backgroundColor: 'red',
+                  };
+                }
+              }
             }}
             onChangeColumnGroups={(items) => {console.log('onChangeColumnGroups', items)} }
           />

@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { Checkbox, TableCell, TableRow, IconButton, Icon, Tooltip } from '@material-ui/core';
+import { Checkbox, TableCell, TableRow, IconButton, Icon, Tooltip, withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 /* eslint-enable no-unused-vars */
 
 
-export default class MTableBodyRow extends React.Component {
+class MTableBodyRow extends React.Component {
   renderColumns() {
     const mapArr = this.props.columns.filter(columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1))
       .sort((a, b) => a.tableData.columnOrder - b.tableData.columnOrder)
@@ -347,3 +347,16 @@ MTableBodyRow.propTypes = {
   onEditingApproved: PropTypes.func,
   onEditingCanceled: PropTypes.func,
 };
+
+export const styles = theme => ({
+  '@global': {
+    'tr.MuiTableRow-root': {
+      backgroundColor: theme.palette.background.paper, // Change according to theme,
+    },
+    'tr.MuiTableRow-root.Mui-selected': {
+      backgroundColor: theme.palette.background.paper, // Change according to theme,
+    }
+  }
+});
+
+export default withStyles(styles)(MTableBodyRow);

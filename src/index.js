@@ -23,7 +23,7 @@ const styles = theme => ({
   },
   '@global': {
     '.MuiTableCell-body.cell-fixed': {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: 'inherit', // theme.palette.background.paper,
       position: 'sticky',
       zIndex: 1
     },
