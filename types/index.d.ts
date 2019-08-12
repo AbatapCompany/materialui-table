@@ -205,15 +205,15 @@ export interface Options {
   exportButton?: boolean;
   exportDelimiter?: string;
   exportFileName?: string;
-  exportNumericDecimalSeparator?: string,
-  exportNumericNullToZero?: boolean,
-  exportTotals?: boolean,
+  exportNumericDecimalSeparator?: string;
+  exportNumericNullToZero?: boolean;
+  exportTotals?: boolean;
   exportCsv?: (columns: any[], renderData: any[]) => void;
   filtering?: boolean;
   filterType?: ('row' | 'header');
   filterCellStyle?: React.CSSProperties;
   filterChilds?: boolean;
-  fixedColumns?: number,
+  fixedColumns?: number;
   header?: boolean;
   headerStyle?: React.CSSProperties;
   initialPage?: number;
