@@ -172,6 +172,16 @@ class MTableBodyRow extends React.Component {
     return style;
   }
 
+  getClassName(index) {
+    let className = '';
+    if (typeof this.props.options.rowClassName === "function") {
+      className = this.props.options.rowClassName(this.props.data, index);
+    } else if (this.props.options.rowClassName) {
+      className = this.props.options.rowClassName;
+    }
+    return className;
+  }
+
   render() {
     const cellClassName = this.props.options.fixedColumns ? 'cell-fixed' : '';
     const renderColumns = this.renderColumns();
@@ -256,6 +266,7 @@ class MTableBodyRow extends React.Component {
           {...rowProps}
           hover={onRowClick ? true : false}
           style={this.getStyle(this.props.index)}
+          className={this.getClassName(this.props.index)}
           onClick={(event) => {
             onRowClick && onRowClick(event, this.props.data,
               (panelIndex) => {

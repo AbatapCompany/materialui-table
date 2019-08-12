@@ -375,6 +375,11 @@ const App = () => {
                     backgroundColor: 'red',
                   };
                 }
+              },
+              rowClassName: (data, index) => {
+                if (data.sex === 'Male') {
+                  return 'male-class';
+                }
               }
             }}
             onChangeColumnGroups={(items) => {console.log('onChangeColumnGroups', items)} }

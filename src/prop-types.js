@@ -142,6 +142,7 @@ export const propTypes = {
     pageSize: PropTypes.number,
     pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
     paginationType: PropTypes.oneOf(['normal', 'stepped']),
+    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
     rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     search: PropTypes.bool,
     strictDigits: PropTypes.bool,

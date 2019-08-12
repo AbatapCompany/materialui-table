@@ -224,6 +224,7 @@ export interface Options {
   pageSize?: number;
   pageSizeOptions?: number[];
   paginationType?: ('normal' | 'stepped');
+  rowClassName?: string | ((data: any, index: number) => string);
   rowStyle?: React.CSSProperties | ((data: any, index: number) => React.CSSProperties);
   showEmptyDataSourceMessage?: boolean;
   showFirstLastPageButtons?: boolean;
