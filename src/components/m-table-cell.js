@@ -117,6 +117,18 @@ export default class MTableCell extends React.Component {
     return { ...this.props.style, ...cellStyle };
   }
 
+  getClassName = () => {
+    let cellClassName = '';
+
+    if (typeof this.props.columnDef.cellClassName === 'function') {
+      cellClassName = this.props.columnDef.cellClassName(this.props.value, this.props.rowData);
+    } else {
+      cellClassName = this.props.columnDef.cellClassName;
+    }
+
+    return cellClassName || '';
+  }
+
   render() {
     const { icons, columnDef, rowData, isFixed, value, sorting, headerFiltering, isTotals,
       datetimeLocaleString, strictDigits, ...cellProps } = this.props;
@@ -131,10 +143,12 @@ export default class MTableCell extends React.Component {
       }
     }
 
+    const className = this.getClassName();
+
     return (
       <TableCell
           {...cellProps}
-          className={isFixed ? 'cell-fixed' : ''}
+          className={(isFixed ? 'cell-fixed ' : '') + className}
           style={this.getStyle()}
           align={['numeric'].indexOf(this.props.columnDef.type) !== -1 ? "right" : "left"}
           onClick={this.handleClickCell}

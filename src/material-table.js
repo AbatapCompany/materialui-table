@@ -495,6 +495,7 @@ export default class MaterialTable extends React.Component {
           columns={this.state.columns}
           draggableHeader={props.options.draggableHeader}
           hasSelection={props.options.selection}
+          headerClassName={props.options.headerClassName}
           headerStyle={props.options.headerStyle}
           selectedCount={this.state.selectedCount}
           dataCount={props.parentChildData ? this.state.treefiedDataLength : this.state.data.length}
@@ -678,7 +679,9 @@ const ScrollBar = ({ double, children, tableId }) => {
 
   if (divRef) {
       let left = 0;
-      const firtRowChildren = divRef.children[0].children[0].children[0].children;
+      const headerRows = divRef.children[0].children[0].children.length;
+      const firtRowChildren = divRef.children[0].children[0].children[headerRows - 1].children;
+
       let style = '';
       for(let i = 0; i < firtRowChildren.length; ++i) {
         const item = firtRowChildren[i];

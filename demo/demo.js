@@ -69,6 +69,9 @@ const App = () => {
   const tableRef = React.createRef();
 
   const [ filterType, setFilterType ] = React.useState('header');
+
+  const salaryBackgroundStyle = {backgroundColor: 'lightGrey'};
+  const rootSalariesHeader = (<span style = {salaryBackgroundStyle}>Salaries, $</span>);
   const [ state, setState ] = React.useState({
     actionsAlign: 'right',
     filterType: 'header',
@@ -109,14 +112,14 @@ const App = () => {
       },
       { title: 'Evli', field: 'isMarried', type: 'boolean' },
       { title: 'Cinsiyet', field: 'sex', disableClick: true, editable: 'onAdd', aggregation: 'custom', render: sexColumnRender },
-      { title: 'Tipi', field: 'type', removable: false, editable: 'never', export: false, },
+      { title: 'Tipi', field: 'type', removable: false, editable: 'never', export: false, },      
+      { title: 'Kayıt Tarihi', field: 'insertDateTime', type: 'datetime', rootTitle: 'Times' },
+      { title: 'Zaman', field: 'time', type: 'time', rootTitle: 'Times' },
+      { title: 'Salary, $', field: 'salary', type: 'numeric', digits: 2, cellStyle: salaryBackgroundStyle, cellClassName: 'salary-cell', headerClassName: 'salary-header', headerStyle: salaryBackgroundStyle, aggregation: 'custom', render: salaryColumnRender, defaultSort: 'desc', rootTitle: rootSalariesHeader },
+      { title: 'Salary 0', field: 'salary', type: 'numeric', digits: 0, cellStyle: salaryBackgroundStyle, cellClassName: 'salary-cell', headerClassName: 'salary-header', headerStyle: salaryBackgroundStyle, aggregation: 'sum', rootTitle: rootSalariesHeader },
+      { title: 'Salary 2', field: 'salary', type: 'numeric', digits: 2, cellStyle: salaryBackgroundStyle, cellClassName: 'salary-cell', headerClassName: 'salary-header', headerStyle: salaryBackgroundStyle, aggregation: 'sum', rootTitle: rootSalariesHeader },
       { title: 'Doğum Yılı', field: 'birthDate', type: 'date', filtering: false, aggregation: 'max' },
       { title: 'Doğum Yeri', field: 'birthCity', lookup: { 34: 'İstanbul', 0: 'Şanlıurfa', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10', 11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19' } },
-      { title: 'Kayıt Tarihi', field: 'insertDateTime', type: 'datetime' },
-      { title: 'Zaman', field: 'time', type: 'time' },
-      { title: 'Salary, $', field: 'salary', type: 'numeric', digits: 2,  aggregation: 'custom', render: salaryColumnRender, defaultSort: 'desc' },
-      { title: 'Salary 0', field: 'salary', type: 'numeric', digits: 0,  aggregation: 'sum' },
-      { title: 'Salary 2', field: 'salary', type: 'numeric', digits: 2,  aggregation: 'sum' },
     ],
     remoteColumns: [
       { title: 'Avatar', field: 'avatar', render: rowData => <img style={{ height: 36, borderRadius: '50%' }} src={rowData.avatar} /> },
@@ -187,7 +190,7 @@ const App = () => {
                   sortChilds: false,
                   defaultExpanded: false,
                   fixedColumns: 3,
-                  maxBodyHeight: '500px',
+                  maxBodyHeight: '400px',
                   exportButton: true,
                   exportDelimiter: ';',
                   exportNumericDecimalSeparator: ',',
@@ -195,6 +198,7 @@ const App = () => {
                   exportTotals: true,
                   datetimeLocaleString: 'ru-RU',
                   strictDigits: true,
+                  headerClassName: 'custom-header-class',
                 }}
                 parentChildData={(row, rows) => row.parentId && rows.find((a) => a.id === row.parentId) || null}
                 onChangeFilter={(items) => {console.log('onChangeFilter', items)} }
@@ -224,7 +228,8 @@ const App = () => {
             ]}
             options={{
               grouping: true,
-              filtering: true
+              filtering: true,
+              columnsButton: true,
             }}
             data={query => new Promise((resolve, reject) => {
               let url = 'https://reqres.in/api/users?'
@@ -332,9 +337,6 @@ const App = () => {
                         console.log('data for save', newData);
                         setTimeout(() => {
                             {
-                                /* const data = this.state.data;
-                                data.push(newData);
-                                this.setState({ data }, () => resolve()); */
                             }
                             resolve();
                         }, 1000);
@@ -343,10 +345,6 @@ const App = () => {
                     new Promise((resolve, reject) => {
                         setTimeout(() => {
                             {
-                                /* const data = this.state.data;
-                                const index = data.indexOf(oldData);
-                                data[index] = newData;                
-                                this.setState({ data }, () => resolve()); */
                             }
                             resolve();
                         }, 1000);
@@ -355,10 +353,6 @@ const App = () => {
                     new Promise((resolve, reject) => {
                         setTimeout(() => {
                             {
-                                /* let data = this.state.data;
-                                const index = data.indexOf(oldData);
-                                data.splice(index, 1);
-                                this.setState({ data }, () => resolve()); */
                             }
                             resolve();
                         }, 1000);

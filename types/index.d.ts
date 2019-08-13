@@ -102,6 +102,7 @@ export interface EditCellColumnDef {
 
 export interface Column {
   aggregation?: 'avg' | 'sum' | 'min' | 'max' | 'count' | 'custom';
+  cellClassName?: string | ((data: any, rowData: any) => string);
   cellStyle?: React.CSSProperties | ((data: any, rowData: any) => React.CSSProperties);
   currencySetting?: { locale?: string, currencyCode?: string, minimumFractionDigits?: number, maximumFractionDigits?: number };
   customFilterAndSearch?: (filter: any, rowData: any, columnDef: Column) => boolean;
@@ -120,11 +121,13 @@ export interface Column {
   filtering?: boolean;
   filterCellStyle?: React.CSSProperties;
   grouping?: boolean;
+  headerClassName?: string;
   headerStyle?: React.CSSProperties;
   hidden?: boolean;
   lookup?: object;
   removable?: boolean;
   render?: (data: any, type: ('row' | 'group' | 'totals')) => any;
+  rootTitle?: string | React.ReactElement<any>;
   searchable?: boolean;
   sorting?: boolean;
   strictDigits?: boolean;
@@ -215,6 +218,7 @@ export interface Options {
   filterChilds?: boolean;
   fixedColumns?: number;
   header?: boolean;
+  headerClassName?: string;
   headerStyle?: React.CSSProperties;
   initialPage?: number;
   loadingType?: ('overlay' | 'linear');

@@ -1,13 +1,23 @@
 /* eslint-disable no-unused-vars */
 import * as React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import PropTypes from 'prop-types';
 import {
   TableHead, TableRow, TableCell,
   TableSortLabel, Checkbox, withStyles
 } from '@material-ui/core';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+
+const defaultCellScope = 'col';
 /* eslint-enable no-unused-vars */
 export class MTableHeader extends React.Component {
+  rootHeaders = {};
+  rootClassNames = {};
+
+  getCellClassName(index) {
+    const cellClassName = `${this.props.headerClassName || ''} ${this.props.classes.header}${(index < this.props.fixedColumns ? ' cell-fixed' : '')}`;
+    return cellClassName;
+  }
 
   renderHeader() {
     const mapArr = this.props.columns.filter(columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1))
@@ -81,7 +91,18 @@ export class MTableHeader extends React.Component {
           );
         }
 
-        const cellClassName = this.props.classes.header + (index < this.props.fixedColumns ? ' cell-fixed' : '');
+        const cellClassName = `${this.getCellClassName(index)} ${columnDef.cellClassName || ''}`;
+
+        let rootTitle = null;
+        if (columnDef.rootTitle) {
+          if (typeof columnDef.rootTitle === 'string') {
+            rootTitle = columnDef.rootTitle;
+          }
+          rootTitle = ReactDOMServer.renderToStaticMarkup(columnDef.rootTitle).replace(/<[^>]+>/g, '');
+          this.rootHeaders[rootTitle] = columnDef.rootTitle;
+          this.rootClassNames[rootTitle] = cellClassName;
+        }
+        const scope = rootTitle || defaultCellScope;
 
         return (
           <TableCell
@@ -89,6 +110,7 @@ export class MTableHeader extends React.Component {
             align={['numeric'].indexOf(columnDef.type) !== -1 ? "right" : "left"}
             className={cellClassName}
             style={{ ...this.props.headerStyle, ...columnDef.headerStyle }}
+            scope={scope}
           >
             <span style={{display: 'inline-flex', alignItems: 'center'}}>{content}</span>
           </TableCell>
@@ -99,8 +121,7 @@ export class MTableHeader extends React.Component {
 
   renderActionsHeader() {
     const localization = { ...MTableHeader.defaultProps.localization, ...this.props.localization };
-    const cellClassName = this.props.classes.header
-      + (this.props.actionsHeaderIndex !== -1 && this.props.actionsHeaderIndex < this.props.fixedColumns ? ' cell-fixed' : '');
+    const cellClassName = `${this.props.headerClassName || ''} ${this.props.classes.header}${(this.props.actionsHeaderIndex !== -1 && this.props.actionsHeaderIndex < this.props.fixedColumns ? ' cell-fixed' : '')}`;
 
     return (
       <TableCell
@@ -108,13 +129,14 @@ export class MTableHeader extends React.Component {
         padding="checkbox"
         className={cellClassName}
         style={{ ...this.props.headerStyle, textAlign: 'center' }}
+        scope={defaultCellScope}
       >
         <TableSortLabel disabled>{localization.actions}</TableSortLabel>
       </TableCell>
     );
   }
   renderSelectionHeader() {
-    const cellClassName = this.props.classes.header + (this.props.fixedColumns ? ' cell-fixed' : '');
+    const cellClassName = this.getCellClassName(0);
 
     return (
       <TableCell
@@ -122,6 +144,7 @@ export class MTableHeader extends React.Component {
         key="key-selection-column"
         className={cellClassName}
         style={{ ...this.props.headerStyle }}
+        scope={defaultCellScope}
       >
         {this.props.showSelectAllCheckbox &&
           <Checkbox
@@ -135,19 +158,21 @@ export class MTableHeader extends React.Component {
   }
 
   renderDetailPanelColumnCell() {
-    const cellClassName = this.props.classes.header
-      + (this.props.detailPanelColumnAlignment === 'left' ? ' cell-fixed' : '');
+    const cellClassName = `${this.props.headerClassName || ''} ${this.props.classes.header}${(this.props.detailPanelColumnAlignment === 'left' ? ' cell-fixed' : '')}`;
 
     return <TableCell
             padding="none"
             key="key-detail-panel-column"
             className={cellClassName}
             style={{ ...this.props.headerStyle }}
+            scope={defaultCellScope}
           />;
   }
 
   render() {
-    const cellClassName = this.props.classes.header + (this.props.fixedColumns ? ' cell-fixed' : '');
+    const cellClassName = `${this.props.headerClassName || ''} ${this.props.classes.header}${(this.props.fixedColumns ? ' cell-fixed' : '')}`;
+    // const cellClassName = `${this.getCellClassName(index)} ${columnDef.cellClassName || ''}`;
+    // const rootCellClassName = `${this.props.headerClassName || ''} ${this.props.classes.header}`;
     const headers = this.renderHeader();
     if (this.props.hasSelection) {
       headers.splice(0, 0, this.renderSelectionHeader());
@@ -180,6 +205,7 @@ export class MTableHeader extends React.Component {
           key={"key-tree-data-header"}
           className={cellClassName}
           style={{ ...this.props.headerStyle }}
+          scope={defaultCellScope}
         />
       );
     }
@@ -187,11 +213,54 @@ export class MTableHeader extends React.Component {
     this.props.columns
       .filter(columnDef => columnDef.tableData.groupOrder > -1)
       .forEach(columnDef => {
-        headers.splice(0, 0, <TableCell padding="checkbox" key={"key-group-header" + columnDef.tableData.id} className={cellClassName} />);
+        headers.splice(0, 0, <TableCell padding="checkbox" key={"key-group-header" + columnDef.tableData.id} className={cellClassName} scope={defaultCellScope} />);
       });
 
+    let rootHeaders = [];
+
+    let headerColumnIndex = 0;
+    let currentTitle = '';
+    const topLevelHeaders = headers.reduce((state, item, index) => {
+      const title = item.props.scope;
+      if (title !== currentTitle) {
+        currentTitle = title;
+        if (index > 0) {
+          ++headerColumnIndex;
+        }
+      }
+      const key = `${headerColumnIndex}_${currentTitle}`;
+      state[key] = state[key] ? state[key] + 1 : 1;
+      return state;
+    }, {});
+
+    const topLevelHeaderKeys = Object.keys(topLevelHeaders);
+    if (topLevelHeaderKeys.length > 1) {
+      rootHeaders = topLevelHeaderKeys.map(topLevelHeader => {
+        let name = topLevelHeader.split('_')[1];
+        if (name === defaultCellScope) {
+          name = '';
+        }
+        return (
+          <TableCell
+            align='center'
+            key={topLevelHeader}
+            style={{ ...this.props.headerStyle }}
+            className={ name === '' ? 'root-header-cell' : `root-header-cell ${this.rootClassNames[name]}`}
+            colSpan={topLevelHeaders[topLevelHeader]}
+          >
+            { name === '' ? '' : this.rootHeaders[name]}
+          </TableCell>
+        );
+      });
+    }
     return (
-      <TableHead>
+      <TableHead style={{position: ''}}>
+        {
+          !!rootHeaders && rootHeaders.length > 0 &&
+          <TableRow>
+            {rootHeaders}
+          </TableRow>
+        }
         <TableRow>
           {headers}
         </TableRow>
@@ -203,6 +272,7 @@ export class MTableHeader extends React.Component {
 MTableHeader.defaultProps = {
   dataCount: 0,
   hasSelection: false,
+  headerClassName: '',
   headerStyle: {},
   selectedCount: 0,
   sorting: true,
@@ -222,6 +292,7 @@ MTableHeader.propTypes = {
   hasDetailPanel: PropTypes.bool.isRequired,
   detailPanelColumnAlignment: PropTypes.string,
   hasSelection: PropTypes.bool,
+  headerClassName: PropTypes.string,
   headerStyle: PropTypes.object,
   localization: PropTypes.object,
   selectedCount: PropTypes.number,
@@ -236,7 +307,7 @@ MTableHeader.propTypes = {
   fixedColumns: PropTypes.number
 };
 
-
+// TODO: online fix style for top like a material-table ScrollBar
 export const styles = theme => ({
   header: {
     position: 'sticky',

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import ReactDOMServer from 'react-dom/server';
-import { Checkbox, FormControlLabel, Icon, IconButton, InputAdornment, Menu, MenuItem, TextField, Toolbar, Tooltip, Typography, withStyles } from '@material-ui/core';
+import { Checkbox, FormControlLabel, Icon, IconButton, InputAdornment, Menu, MenuItem, TextField,
+  Toolbar, Tooltip, Typography, withStyles, Divider  } from '@material-ui/core';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import classNames from 'classnames';
 import { CsvBuilder } from 'filefy';
@@ -121,10 +122,22 @@ export class MTableToolbar extends React.Component {
     builder
       .setDelimeter(this.props.exportDelimiter)
       .setColumns(columns.map(columnDef => {
+        let title = '';
         if (typeof columnDef.title === 'string') {
-          return columnDef.title;
+          title = columnDef.title;
         }
-        return ReactDOMServer.renderToStaticMarkup(columnDef.title).replace(/<[^>]+>/g, '');
+        title = ReactDOMServer.renderToStaticMarkup(columnDef.title).replace(/<[^>]+>/g, '');
+
+        let rootTitle = null;
+        if (columnDef.rootTitle) {
+          if (typeof columnDef.rootTitle === 'string') {
+            rootTitle = columnDef.rootTitle;
+          }
+          rootTitle = ReactDOMServer.renderToStaticMarkup(columnDef.rootTitle).replace(/<[^>]+>/g, '');
+          return `${title} (${rootTitle})`;
+        }
+
+        return title;
       }))
       .addRows(data)
       .exportFile();
@@ -179,6 +192,50 @@ export class MTableToolbar extends React.Component {
 
   renderDefaultActions() {
     const localization = { ...MTableToolbar.defaultProps.localization, ...this.props.localization };
+
+    const menuItems = [];
+    this.props.columns.forEach((col, index, arr) => {
+      if (index > 0 && arr[index - 1].rootTitle !== col.rootTitle) {
+        menuItems.push(<Divider key={`devider_for_${col.tableData.id}`} />);
+      }
+      if (!!col.rootTitle && (index === 0 || arr[index - 1].rootTitle !== col.rootTitle)) {
+        let rootTitle = null;
+        if (col.rootTitle) {
+          if (typeof col.rootTitle === 'string') {
+            rootTitle = col.rootTitle;
+          }
+          rootTitle = ReactDOMServer.renderToStaticMarkup(col.rootTitle).replace(/<[^>]+>/g, '');
+        }
+        menuItems.push(
+        <MenuItem key={`root_for_${col.tableData.id}`} disabled={true}>
+          {rootTitle}
+        </MenuItem>
+        );
+      }
+      let title = null;
+        if (col.title) {
+          if (typeof col.title === 'string') {
+            title = col.title;
+          }
+          title = ReactDOMServer.renderToStaticMarkup(col.title).replace(/<[^>]+>/g, '');
+        }
+      menuItems.push(
+        <MenuItem key={col.tableData.id} disabled={col.removable === false}>
+          <FormControlLabel
+            label={title}
+            control={
+              <Checkbox
+                checked={!col.hidden}
+                onChange={(event, checked) => {
+                  this.props.onColumnsChanged(col.tableData.id, !checked);
+                }
+                } />
+            }
+          />
+        </MenuItem>
+      );
+    });
+
     return (
       <div>
         {this.props.columnsButton &&
@@ -200,23 +257,7 @@ export class MTableToolbar extends React.Component {
                 {localization.addRemoveColumns}
               </MenuItem>
               {
-                this.props.columns.map((col, index) => {
-                  return (
-                    <MenuItem key={col.tableData.id} disabled={col.removable === false}>
-                      <FormControlLabel
-                        label={col.title}
-                        control={
-                          <Checkbox
-                            checked={!col.hidden}
-                            onChange={(event, checked) => {
-                              this.props.onColumnsChanged(col.tableData.id, !checked);
-                            }
-                            } />
-                        }
-                      />
-                    </MenuItem>
-                  );
-                })
+                menuItems.map(item => item)
               }
             </Menu>
           </span>
