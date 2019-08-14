@@ -4,7 +4,41 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 /* eslint-enable no-unused-vars */
 
+const isEqual = (objA, objB) => {
+  if (objA === objB) {
+    return true;
+  }
+
+  if (typeof objA !== 'object' || objA === null ||
+      typeof objB !== 'object' || objB === null) {
+    return false;
+  }
+
+  var keysA = Object.keys(objA);
+  var keysB = Object.keys(objB);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  // Test for A's keys different from B.
+  var bHasOwnProperty = hasOwnProperty.bind(objB);
+  for (var i = 0; i < keysA.length; i++) {
+    // console.log('compared field', keysA[i]);
+    if (!bHasOwnProperty(keysA[i]) || !isEqual(objA[keysA[i]], objB[keysA[i]])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 class MTableBody extends React.Component {
+
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
+
   renderEmpty(emptyRowCount, renderData) {
     const localization = { ...MTableBody.defaultProps.localization, ...this.props.localization };
     if (this.props.options.showEmptyDataSourceMessage && renderData.length === 0) {
@@ -198,7 +232,8 @@ MTableBody.defaultProps = {
     emptyDataSourceMessage: 'No records to display',
     filterRow: {},
     editRow: {}
-  }
+  },
+  version: 0,
 };
 
 MTableBody.propTypes = {
@@ -219,7 +254,6 @@ MTableBody.propTypes = {
   initialFormData: PropTypes.object,
   selection: PropTypes.bool.isRequired,
   showAddRow: PropTypes.bool,
-  treeDataMaxLevel: PropTypes.number,  
   localization: PropTypes.object,
   onFilterChanged: PropTypes.func,
   onGroupExpandChanged: PropTypes.func,
@@ -228,6 +262,8 @@ MTableBody.propTypes = {
   onRowClick: PropTypes.func,
   onEditingCanceled: PropTypes.func,
   onEditingApproved: PropTypes.func,
+  treeDataMaxLevel: PropTypes.number,
+  version: PropTypes.number,
 };
 
 export default MTableBody;

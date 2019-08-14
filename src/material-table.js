@@ -43,6 +43,7 @@ export default class MaterialTable extends React.Component {
       },
       showAddRow: false,
       isDragged: false,
+      tableBodyVersion: 0,
     };
   }
 
@@ -89,7 +90,7 @@ export default class MaterialTable extends React.Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     const props = this.getProps(nextProps);
     this.setDataManagerFields(props);
-    this.setState(this.dataManager.getRenderState());
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
   }
 
   getProps(props) {
@@ -154,12 +155,12 @@ export default class MaterialTable extends React.Component {
 
   onAllSelected = (checked) => {
     this.dataManager.changeAllSelected(checked);
-    this.setState(this.dataManager.getRenderState(), () => this.onSelectionChange());
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => this.onSelectionChange());
   }
 
   onChangeColumnHidden = (columnId, hidden) => {
     this.dataManager.changeColumnHidden(columnId, hidden);
-    this.setState(this.dataManager.getRenderState());
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
 
     if (this.props.onChangeColumnHidden) {
       this.props.onChangeColumnHidden(columnId, hidden, this.state.columns.sort((a, b) =>
@@ -169,7 +170,7 @@ export default class MaterialTable extends React.Component {
 
   onChangeGroupOrder = (groupedColumn) => {
     const groupedResult = this.dataManager.changeGroupOrder(groupedColumn.tableData.id);
-    this.setState(this.dataManager.getRenderState());
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
 
     if (groupedResult !== undefined && this.props.onChangeColumnGroups) {
       this.props.onChangeColumnGroups(groupedResult);
@@ -189,7 +190,7 @@ export default class MaterialTable extends React.Component {
       });
     }
     else {
-      this.setState(this.dataManager.getRenderState(), () => {
+      this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.onOrderChange && this.props.onOrderChange(orderBy, orderDirection);
       });
     }
@@ -205,7 +206,7 @@ export default class MaterialTable extends React.Component {
     }
     else {
       this.dataManager.changeCurrentPage(page);
-      this.setState(this.dataManager.getRenderState(), () => {
+      this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.onChangePage && this.props.onChangePage(page);
       });
     }
@@ -226,7 +227,7 @@ export default class MaterialTable extends React.Component {
     }
     else {
       this.dataManager.changeCurrentPage(0);
-      this.setState(this.dataManager.getRenderState(), () => {
+      this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.onChangeRowsPerPage && this.props.onChangeRowsPerPage(pageSize);
       });
     }
@@ -245,7 +246,7 @@ export default class MaterialTable extends React.Component {
     }
 
     const groupedResult = this.dataManager.changeByDrag(result);
-    this.setState(Object.assign(this.dataManager.getRenderState(), {isDragged: false}));
+    this.setState({ ...this.dataManager.getRenderState(), isDragged: false, tableBodyVersion: this.state.tableBodyVersion + 1 });
 
     if (result && result.destination && result.destination.droppableId === 'headers'
       && result.source && result.source.droppableId === result.destination.droppableId
@@ -262,7 +263,7 @@ export default class MaterialTable extends React.Component {
 
   onGroupExpandChanged = (path) => {
     this.dataManager.changeGroupExpand(path);
-    this.setState(this.dataManager.getRenderState());
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
   }
 
   onGroupRemoved = (groupedColumn, index) => {
@@ -276,7 +277,7 @@ export default class MaterialTable extends React.Component {
       type: "DEFAULT"
     };
     const groupedResult = this.dataManager.changeByDrag(result);
-    this.setState(this.dataManager.getRenderState());
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
     if (groupedResult !== undefined && this.props.onChangeColumnGroups) {
       this.props.onChangeColumnGroups(groupedResult);
     }
@@ -284,27 +285,28 @@ export default class MaterialTable extends React.Component {
 
   onEditingApproved = (mode, newData, oldData) => {
     if (mode === "add") {
-      this.setState({ isLoading: true }, () => {
+      this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.editable.onRowAdd(newData)
           .then(result => {
-            this.setState({ isLoading: false, showAddRow: false }, () => {
+            this.setState({ isLoading: false, showAddRow: false, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
               if (this.isRemoteData()) {
                 this.onQueryChange(this.state.query);
               }
             });
           })
           .catch(reason => {
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: false, tableBodyVersion: this.state.tableBodyVersion + 1 });
           });
       });
     }
     else if (mode === "update") {
-      this.setState({ isLoading: true }, () => {
+      this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.editable.onRowUpdate(newData, oldData)
           .then(result => {
             this.dataManager.changeRowEditing(oldData);
             this.setState({
               isLoading: false,
+              tableBodyVersion: this.state.tableBodyVersion + 1,
               ...this.dataManager.getRenderState()
             }, () => {
               if (this.isRemoteData()) {
@@ -313,18 +315,19 @@ export default class MaterialTable extends React.Component {
             });
           })
           .catch(reason => {
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: false, tableBodyVersion: this.state.tableBodyVersion + 1 });
           });
       });
 
     }
     else if (mode === "delete") {
-      this.setState({ isLoading: true }, () => {
+      this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.editable.onRowDelete(oldData)
           .then(result => {
             this.dataManager.changeRowEditing(oldData);
             this.setState({
               isLoading: false,
+              tableBodyVersion: this.state.tableBodyVersion + 1,
               ...this.dataManager.getRenderState()
             }, () => {
               if (this.isRemoteData()) {
@@ -333,7 +336,7 @@ export default class MaterialTable extends React.Component {
             });
           })
           .catch(reason => {
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: false, tableBodyVersion: this.state.tableBodyVersion + 1 });
           });
       });
     }
@@ -341,24 +344,25 @@ export default class MaterialTable extends React.Component {
 
   onEditingCanceled = (mode, rowData) => {
     if (mode === "add") {
-      this.setState({ showAddRow: false });
+      this.setState({ showAddRow: false, tableBodyVersion: this.state.tableBodyVersion + 1 });
     }
     else if (mode === "update" || mode === "delete") {
       this.dataManager.changeRowEditing(rowData);
-      this.setState(this.dataManager.getRenderState());
+      this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
     }
   }
 
   onQueryChange = (query, callback) => {
     query = { ...this.state.query, ...query };
 
-    this.setState({ isLoading: true }, () => {
+    this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
       this.props.data(query).then((result) => {
         query.totalCount = result.totalCount;
         query.page = result.page;
         this.dataManager.setData(result.data);
         this.setState({
           isLoading: false,
+          tableBodyVersion: this.state.tableBodyVersion + 1,
           ...this.dataManager.getRenderState(),
           query
         }, () => {
@@ -370,7 +374,7 @@ export default class MaterialTable extends React.Component {
 
   onRowSelected = (event, path, dataClicked) => {
     this.dataManager.changeRowSelected(event.target.checked, path);
-    this.setState(this.dataManager.getRenderState(), () => this.onSelectionChange(dataClicked));
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => this.onSelectionChange(dataClicked));
   }
 
   onSelectionChange = (dataClicked) => {
@@ -405,7 +409,7 @@ export default class MaterialTable extends React.Component {
       this.onQueryChange(query);
     }
     else {
-      this.setState(this.dataManager.getRenderState());
+      this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
     }
   }, this.props.options.debounceInterval)
 
@@ -428,7 +432,7 @@ export default class MaterialTable extends React.Component {
       this.onQueryChange(query);
     }
     else {
-      this.setState(this.dataManager.getRenderState());
+      this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
     }
 
     if (this.props.onChangeFilter) {
@@ -443,14 +447,14 @@ export default class MaterialTable extends React.Component {
 
   onTreeExpandChanged = (path, data) => {
     this.dataManager.changeTreeExpand(path);
-    this.setState(this.dataManager.getRenderState(), () => {
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
       this.props.onTreeExpandChange && this.props.onTreeExpandChange(data, data.tableData.isTreeExpanded);
     });
   }
 
   onToggleDetailPanel = (path, render) => {
     this.dataManager.changeDetailPanelVisibility(path, render);
-    this.setState(this.dataManager.getRenderState());
+    this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
   }
 
   renderFooter() {
@@ -553,6 +557,7 @@ export default class MaterialTable extends React.Component {
         hasAnyEditingRow={!!(this.state.lastEditingRow || this.state.showAddRow)}
         hasDetailPanel={!!props.detailPanel}
         treeDataMaxLevel={this.state.treeDataMaxLevel}
+        version={this.state.tableBodyVersion}
       />
       {this.props.options.aggregation && !!this.dataManager.filteredData && !!this.dataManager.filteredData.length &&
         <TableFooter>
