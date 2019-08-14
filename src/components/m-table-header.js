@@ -313,10 +313,13 @@ export const styles = theme => ({
     position: 'sticky',
     top: 0,
     zIndex: 10,
-    backgroundColor: theme.palette.background.paper, // Change according to theme,
     '& > span .empty-header-filter-button': {
       // display: 'none'
       color: 'white'
+    },
+    '&.cell-fixed': {
+      // display: 'none'
+      backgroundColor: theme.palette.background.paper, // Change according to theme,
     },
     '& > span:hover .empty-header-filter-button': {
       // display: 'block'
