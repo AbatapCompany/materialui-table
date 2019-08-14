@@ -183,7 +183,7 @@ const App = () => {
                   aggregateChilds: false,
                   columnsButton: true,
                   selection: true,
-                  grouping: true,
+                  grouping: false,
                   filtering: true,
                   filterType: filterType,
                   filterChilds: false,

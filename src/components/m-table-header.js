@@ -239,6 +239,7 @@ export class MTableHeader extends React.Component {
     }, {});
 
     const topLevelHeaderKeys = Object.keys(topLevelHeaders);
+    const rootHeadersKeys = Object.keys(this.rootHeaders);
     if (topLevelHeaderKeys.length > 1) {
       rootHeaders = topLevelHeaderKeys.map((topLevelHeader, index) => {
         let name = topLevelHeader.split('_')[1];
@@ -261,7 +262,7 @@ export class MTableHeader extends React.Component {
     return (
       <TableHead style={{position: ''}}>
         {
-          !!rootHeaders && rootHeaders.length > 0 &&
+          rootHeadersKeys.length > 0 &&
           <TableRow>
             {rootHeaders}
           </TableRow>
