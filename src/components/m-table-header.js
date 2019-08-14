@@ -6,7 +6,7 @@ import {
   TableHead, TableRow, TableCell,
   TableSortLabel, Checkbox, withStyles
 } from '@material-ui/core';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { Draggable } from 'react-beautiful-dnd';
 
 const defaultCellScope = 'col';
 /* eslint-enable no-unused-vars */
@@ -34,7 +34,7 @@ export class MTableHeader extends React.Component {
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
-              // style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                // style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
               >
                 {columnDef.title}
               </div>
@@ -170,12 +170,14 @@ export class MTableHeader extends React.Component {
   }
 
   render() {
+    let rooltLevelCellFixedAddon = 0;
     const cellClassName = `${this.props.headerClassName || ''} ${this.props.classes.header}${(this.props.fixedColumns ? ' cell-fixed' : '')}`;
     // const cellClassName = `${this.getCellClassName(index)} ${columnDef.cellClassName || ''}`;
     // const rootCellClassName = `${this.props.headerClassName || ''} ${this.props.classes.header}`;
     const headers = this.renderHeader();
     if (this.props.hasSelection) {
       headers.splice(0, 0, this.renderSelectionHeader());
+      ++rooltLevelCellFixedAddon;
     }
 
     if (this.props.showActionsColumn) {
@@ -188,6 +190,7 @@ export class MTableHeader extends React.Component {
       } else if (this.props.actionsHeaderIndex === -1) {
         headers.push(this.renderActionsHeader());
       }
+      ++rooltLevelCellFixedAddon;
     }
 
     if (this.props.hasDetailPanel) {
@@ -196,6 +199,7 @@ export class MTableHeader extends React.Component {
       } else {
         headers.splice(0, 0, this.renderDetailPanelColumnCell());
       }
+      ++rooltLevelCellFixedAddon;
     }
 
     if (this.props.isTreeData > 0) {
@@ -208,6 +212,7 @@ export class MTableHeader extends React.Component {
           scope={defaultCellScope}
         />
       );
+      ++rooltLevelCellFixedAddon;
     }
 
     this.props.columns
@@ -222,7 +227,7 @@ export class MTableHeader extends React.Component {
     let currentTitle = '';
     const topLevelHeaders = headers.reduce((state, item, index) => {
       const title = item.props.scope;
-      if (title !== currentTitle) {
+      if (title !== currentTitle || (this.props.fixedColumns && (this.props.fixedColumns + rooltLevelCellFixedAddon) === index)) {
         currentTitle = title;
         if (index > 0) {
           ++headerColumnIndex;
@@ -235,7 +240,7 @@ export class MTableHeader extends React.Component {
 
     const topLevelHeaderKeys = Object.keys(topLevelHeaders);
     if (topLevelHeaderKeys.length > 1) {
-      rootHeaders = topLevelHeaderKeys.map(topLevelHeader => {
+      rootHeaders = topLevelHeaderKeys.map((topLevelHeader, index) => {
         let name = topLevelHeader.split('_')[1];
         if (name === defaultCellScope) {
           name = '';
@@ -245,7 +250,7 @@ export class MTableHeader extends React.Component {
             align='center'
             key={topLevelHeader}
             style={{ ...this.props.headerStyle }}
-            className={ name === '' ? 'root-header-cell' : `root-header-cell ${this.rootClassNames[name]}`}
+            className={`root-header-cell ${ name === '' ? `${this.props.classes.header}` : `${this.rootClassNames[name]}`}${(this.props.fixedColumns && !index ? ' cell-fixed' : '')}`}
             colSpan={topLevelHeaders[topLevelHeader]}
           >
             { name === '' ? '' : this.rootHeaders[name]}
@@ -317,9 +322,13 @@ export const styles = theme => ({
       // display: 'none'
       color: 'white'
     },
-    '&.cell-fixed': {
+    '&': {
       // display: 'none'
       backgroundColor: theme.palette.background.paper, // Change according to theme,
+    },
+    '&.is-dragged': {
+      // display: 'none'
+      backgroundColor: 'transparent!important',
     },
     '& > span:hover .empty-header-filter-button': {
       // display: 'block'

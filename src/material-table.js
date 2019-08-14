@@ -41,7 +41,8 @@ export default class MaterialTable extends React.Component {
 
         totalCount: 0
       },
-      showAddRow: false
+      showAddRow: false,
+      isDragged: false,
     };
   }
 
@@ -231,13 +232,20 @@ export default class MaterialTable extends React.Component {
     }
   }
 
+  onDragStart = () => {
+    this.setState({
+      isDragged: true,
+    });
+
+  }
+
   onDragEnd = result => {
     if (result && result.destination && result.destination.index < this.props.options.fixedColumns && result.destination.droppableId === "headers") {
       return;
     }
 
     const groupedResult = this.dataManager.changeByDrag(result);
-    this.setState(this.dataManager.getRenderState());
+    this.setState(Object.assign(this.dataManager.getRenderState(), {isDragged: false}));
 
     if (result && result.destination && result.destination.droppableId === 'headers'
       && result.source && result.source.droppableId === result.destination.droppableId
@@ -495,7 +503,7 @@ export default class MaterialTable extends React.Component {
           columns={this.state.columns}
           draggableHeader={props.options.draggableHeader}
           hasSelection={props.options.selection}
-          headerClassName={props.options.headerClassName}
+          headerClassName={`${props.options.headerClassName || ''}${this.state.isDragged ? ' is-dragged' : ''}`}
           headerStyle={props.options.headerStyle}
           selectedCount={this.state.selectedCount}
           dataCount={props.parentChildData ? this.state.treefiedDataLength : this.state.data.length}
@@ -568,7 +576,7 @@ export default class MaterialTable extends React.Component {
     const props = this.getProps();
 
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
+      <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
         <props.components.Container style={{ position: 'relative', ...props.style }}>
           {props.options.toolbar &&
             <props.components.Toolbar
