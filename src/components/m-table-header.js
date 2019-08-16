@@ -321,7 +321,7 @@ export const styles = theme => ({
     zIndex: 10,
     '& > span .empty-header-filter-button': {
       // display: 'none'
-      color: 'white'
+      color: 'transparent'
     },
     '&': {
       // display: 'none'
