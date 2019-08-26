@@ -34,7 +34,7 @@ const sexColumnRender = (data, type) => {
     return result;
   }
 
-  return data.sex;
+  return data.sex + '!';
 };
 
 const salaryColumnRender = (data, type) => {
