@@ -32,6 +32,8 @@ const sexColumnRender = (data, type) => {
     }
 
     return result;
+  } else if (type === 'export') {
+    return data.sex + '_export!';
   }
 
   return data.sex + '!';

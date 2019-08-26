@@ -126,7 +126,7 @@ export interface Column {
   hidden?: boolean;
   lookup?: object;
   removable?: boolean;
-  render?: (data: any, type: ('row' | 'group' | 'totals')) => any;
+  render?: (data: any, type: ('row' | 'group' | 'totals' | 'export')) => any;
   rootTitle?: string | React.ReactElement<any>;
   searchable?: boolean;
   sorting?: boolean;

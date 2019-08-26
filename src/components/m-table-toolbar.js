@@ -29,9 +29,13 @@ export class MTableToolbar extends React.Component {
 
     const data = dataToExport.map(rowData =>
       columns.map(columnDef => {
-        let val = columnDef.render
-          ? columnDef.render(rowData, 'row')
-          : this.props.getFieldValue(rowData, columnDef);
+        let val = undefined;
+        if(columnDef.render) {
+          val = columnDef.render(rowData, 'export');
+        }
+        if (!columnDef.render || val === undefined) {
+          val = this.props.getFieldValue(rowData, columnDef);
+        }
         if (columnDef.type === 'numeric' || typeof val === 'number') {
           if (columnDef.digits !== undefined) {
             let normalizedValue = (val && val.toFixed) ? val.toFixed(columnDef.digits) : null;
