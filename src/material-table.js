@@ -19,7 +19,7 @@ export default class MaterialTable extends React.Component {
     this.id = `m_table_${tableCounter++}`;
 
     const calculatedProps = this.getProps(props);
-    this.setDataManagerFields(calculatedProps, true);
+    this.setDataManagerFields(calculatedProps);
     const renderState = this.dataManager.getRenderState();
 
     this.state = {
@@ -55,7 +55,7 @@ export default class MaterialTable extends React.Component {
     });
   }
 
-  setDataManagerFields(props, isInit) {
+  setDataManagerFields(props, prevProps) {
     let defaultSortColumnIndex = -1;
     let defaultSortDirection = '';
     if (props) {
@@ -78,6 +78,7 @@ export default class MaterialTable extends React.Component {
       this.dataManager.changeApplyFilters(true);
       this.dataManager.setData(props.data);
     }
+    const isInit = !prevProps || prevProps.name !== props.name;
 
     isInit && this.dataManager.changeOrder(defaultSortColumnIndex, defaultSortDirection);
     isInit && this.dataManager.changeCurrentPage(props.options.initialPage ? props.options.initialPage : 0);
@@ -89,7 +90,7 @@ export default class MaterialTable extends React.Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const props = this.getProps(nextProps);
-    this.setDataManagerFields(props);
+    this.setDataManagerFields(props, this.getProps());
     this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
   }
 
