@@ -30,10 +30,24 @@ export class MTableToolbar extends React.Component {
     const data = dataToExport.map(rowData =>
       columns.map(columnDef => {
         let val = undefined;
-        if(columnDef.render) {
+        if (columnDef.render) {
           val = columnDef.render(rowData, 'export');
         }
-        if (!columnDef.render || val === undefined) {
+        if (val !== undefined) {
+          if (typeof val === 'object') {
+            if (val instanceof Date) {
+              if (columnDef.type === 'date') {
+                val = val.toLocaleDateString(this.props.datetimeLocaleString);
+              } else if (columnDef.type === 'time') {
+                val = val.toLocaleTimeString(this.props.datetimeLocaleString);
+              } else {
+                val = val.toLocaleString(this.props.datetimeLocaleString);
+              } 
+            } else {
+              val = ReactDOMServer.renderToStaticMarkup(val).replace(/<[^>]+>/g, '');
+            }
+          }
+        } else {
           val = this.props.getFieldValue(rowData, columnDef);
         }
         if (columnDef.type === 'numeric' || typeof val === 'number') {
