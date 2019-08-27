@@ -3,6 +3,30 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 
 class MTableTotalsRow extends React.Component {
+  getStyle = (value, columnDef) => {
+    let cellStyle = {};
+
+    if (typeof columnDef.cellStyle === 'function') {
+      cellStyle = { ...cellStyle, ...columnDef.cellStyle(value, undefined) };
+    } else {
+      cellStyle = { ...cellStyle, ...columnDef.cellStyle };
+    }
+
+    return { ...cellStyle };
+  }
+
+  getClassName = (value, columnDef) => {
+    let cellClassName = '';
+
+    if (typeof columnDef.cellClassName === 'function') {
+      cellClassName = columnDef.cellClassName(value, undefined);
+    } else {
+      cellClassName = columnDef.cellClassName;
+    }
+
+    return cellClassName || '';
+  }
+
   renderColumns() {
     const mapArr = this.props.columns.filter(columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1))
       .sort((a, b) => a.tableData.columnOrder - b.tableData.columnOrder)
@@ -11,7 +35,11 @@ class MTableTotalsRow extends React.Component {
         const value = this.props.getAggregation(this.props.renderData, columnDef);
 
         return value === undefined
-          ? <TableCell key={`cell-total-${columnDef.tableData.id}`} className={cellClassName}>{value}</TableCell>
+          ? <TableCell
+              key={`cell-total-${columnDef.tableData.id}`}
+              style={this.getStyle(value, columnDef)}
+              className={`${cellClassName} ${this.getClassName(value, columnDef)}`}
+            />
           : <this.props.components.Cell
               strictDigits={this.props.options.strictDigits}
               icons={this.props.icons}

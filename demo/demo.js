@@ -112,7 +112,7 @@ const App = () => {
           )
         },
       },
-      { title: 'Evli', field: 'isMarried', type: 'boolean' },
+      { title: 'Evli', field: 'isMarried', type: 'boolean', cellStyle: salaryBackgroundStyle, cellClassName: 'salary-cell' },
       { title: 'Cinsiyet', field: 'sex', disableClick: true, editable: 'onAdd', aggregation: 'custom', render: sexColumnRender },
       { title: 'Tipi', field: 'type', removable: false, editable: 'never', export: false, },      
       { title: 'Kayıt Tarihi', field: 'insertDateTime', type: 'datetime', rootTitle: 'Times' },
