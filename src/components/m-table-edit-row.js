@@ -19,7 +19,7 @@ export default class MTableEditRow extends React.Component {
   renderColumns() {
     const mapArr = this.props.columns.filter(columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1))
       .map((columnDef, index) => {
-        const value = (typeof this.state.data[columnDef.field] !== 'undefined' ? this.state.data[columnDef.field] : byString(this.state.data, columnDef.field));
+        let value = (typeof this.state.data[columnDef.field] !== 'undefined' ? this.state.data[columnDef.field] : byString(this.state.data, columnDef.field));
         const style = {};
         const cellClassName = (index) => index < this.props.options.fixedColumns ? 'cell-fixed' : '';
         if (index === 0) {
@@ -42,6 +42,9 @@ export default class MTableEditRow extends React.Component {
         }
 
         if (!columnDef.field || !allowEditing) {
+          if (columnDef.lookup) {
+            value = columnDef.lookup[value];
+          }
           return (
             <this.props.components.Cell
               strictDigits={this.props.options.strictDigits}
