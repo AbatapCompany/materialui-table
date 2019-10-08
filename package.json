@@ -1,6 +1,6 @@
 {
   "name": "@softmedialab/materialui-table",
-  "version": "1.0.45",
+  "version": "1.0.46",
   "description": "Datatable for React based on https://material-table.com with additional features",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
