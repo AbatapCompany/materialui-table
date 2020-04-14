@@ -114,7 +114,7 @@ const App = () => {
       },
       { title: 'Evli', field: 'isMarried', type: 'boolean', cellStyle: salaryBackgroundStyle, cellClassName: 'salary-cell' },
       { title: 'Cinsiyet', field: 'sex', disableClick: true, editable: 'onAdd', aggregation: 'custom', render: sexColumnRender },
-      { title: 'Tipi', field: 'type', removable: false, editable: 'never', export: false, },      
+      { title: 'Tipi', field: 'type', removable: false, editable: 'never', export: false, },
       { title: 'Kayıt Tarihi', field: 'insertDateTime', type: 'datetime', rootTitle: 'Times' },
       { title: 'Zaman', field: 'time', type: 'time', rootTitle: 'Times' },
       { title: 'Salary, $', field: 'salary', type: 'numeric', digits: 2, cellStyle: salaryBackgroundStyle, cellClassName: 'salary-cell', headerClassName: 'salary-header', headerStyle: salaryBackgroundStyle, aggregation: 'custom', render: salaryColumnRender, defaultSort: 'desc', rootTitle: rootSalariesHeader },
@@ -230,7 +230,7 @@ const App = () => {
             ]}
             options={{
               grouping: true,
-              filtering: true,
+              // filtering: true,
               columnsButton: true,
             }}
             data={query => new Promise((resolve, reject) => {

@@ -14,7 +14,7 @@ class MTableActions extends React.Component {
   }
 }
 
-MTableActions.defaultProps = {  
+MTableActions.defaultProps = {
   actions: [],
   data: {}
 };

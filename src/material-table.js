@@ -76,7 +76,7 @@ export default class MaterialTable extends React.Component {
     else {
       this.dataManager.changeApplySearch(true);
       this.dataManager.changeApplyFilters(true);
-      this.dataManager.setData(props.data);
+      this.setData(props.data);
     }
     const isInit = !prevProps || prevProps.name !== props.name;
 
@@ -86,6 +86,10 @@ export default class MaterialTable extends React.Component {
     isInit && this.dataManager.changePaging(props.options.paging);
     isInit && this.dataManager.changeParentFunc(props.parentChildData);
     this.dataManager.changeDetailPanelType(props.options.detailPanelType);
+  }
+
+  setData(data) {
+    this.dataManager.setData(data);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -107,6 +111,10 @@ export default class MaterialTable extends React.Component {
           tooltip: localization.addTooltip,
           isFreeAction: true,
           onClick: () => {
+
+            if (this.props.onClickActionButton) {
+              this.props.onClickActionButton('addStart');
+            }
             this.dataManager.changeRowEditing();
             this.setState({
               ...this.dataManager.getRenderState(),
@@ -121,6 +129,12 @@ export default class MaterialTable extends React.Component {
           tooltip: localization.editTooltip,
           disabled: calculatedProps.editable.isEditable && !calculatedProps.editable.isEditable(rowData),
           onClick: (e, rowData) => {
+            if (this.dataManager.lastEditingRow) {
+              return;
+            }
+            if (this.props.onClickActionButton) {
+              this.props.onClickActionButton('updateStart', rowData);
+            }
             this.dataManager.changeRowEditing(rowData, "update");
             this.setState({
               ...this.dataManager.getRenderState(),
@@ -135,6 +149,12 @@ export default class MaterialTable extends React.Component {
           tooltip: localization.deleteTooltip,
           disabled: calculatedProps.editable.isDeletable && !calculatedProps.editable.isDeletable(rowData),
           onClick: (e, rowData) => {
+            if (this.dataManager.lastEditingRow) {
+              return;
+            }
+            if (this.props.onClickActionButton) {
+              this.props.onClickActionButton('deleteStart', rowData);
+            }
             this.dataManager.changeRowEditing(rowData, "delete");
             this.setState({
               ...this.dataManager.getRenderState(),
@@ -254,7 +274,7 @@ export default class MaterialTable extends React.Component {
       && this.props.onChangeColumnOrder) {
         this.props.onChangeColumnOrder(this.state.columns.sort((a, b) =>
           (a.tableData.columnOrder > b.tableData.columnOrder) ? 1 : -1));
-        
+
     }
 
     if (groupedResult !== undefined && this.props.onChangeColumnGroups) {
@@ -285,10 +305,16 @@ export default class MaterialTable extends React.Component {
   }
 
   onEditingApproved = (mode, newData, oldData) => {
+    if (this.props.onClickActionButton) {
+      this.props.onClickActionButton(mode + 'Approved');
+    }
     if (mode === "add") {
       this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.editable.onRowAdd(newData)
           .then(result => {
+            if (this.props.onClickActionButton) {
+              this.props.onClickActionButton(mode + 'End', newData);
+            }
             this.setState({ isLoading: false, showAddRow: false, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
               if (this.isRemoteData()) {
                 this.onQueryChange(this.state.query);
@@ -304,6 +330,9 @@ export default class MaterialTable extends React.Component {
       this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.editable.onRowUpdate(newData, oldData)
           .then(result => {
+            if (this.props.onClickActionButton) {
+              this.props.onClickActionButton(mode + 'End', newData, oldData);
+            }
             this.dataManager.changeRowEditing(oldData);
             this.setState({
               isLoading: false,
@@ -325,6 +354,9 @@ export default class MaterialTable extends React.Component {
       this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
         this.props.editable.onRowDelete(oldData)
           .then(result => {
+            if (this.props.onClickActionButton) {
+              this.props.onClickActionButton(mode + 'End', oldData);
+            }
             this.dataManager.changeRowEditing(oldData);
             this.setState({
               isLoading: false,
@@ -344,6 +376,9 @@ export default class MaterialTable extends React.Component {
   }
 
   onEditingCanceled = (mode, rowData) => {
+    if (this.props.onClickActionButton) {
+      this.props.onClickActionButton(mode + 'Cancel');
+    }
     if (mode === "add") {
       this.setState({ showAddRow: false, tableBodyVersion: this.state.tableBodyVersion + 1 });
     }
@@ -360,7 +395,7 @@ export default class MaterialTable extends React.Component {
       this.props.data(query).then((result) => {
         query.totalCount = result.totalCount;
         query.page = result.page;
-        this.dataManager.setData(result.data);
+        this.setData(result.data);
         this.setState({
           isLoading: false,
           tableBodyVersion: this.state.tableBodyVersion + 1,
@@ -721,7 +756,7 @@ const ScrollBar = ({ double, children, tableId }) => {
       <div ref={setRef} style={{ overflowX: 'auto' }} >
         {children}
         {
-          cellFixedStyle !== '' && 
+          cellFixedStyle !== '' &&
           <style>{cellFixedStyle}</style>
         }
       </div>
