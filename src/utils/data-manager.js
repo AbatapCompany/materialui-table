@@ -47,7 +47,7 @@ export default class DataManager {
 
   setData(data) {
     this.selectedCount = 0;
-    let alreadyEditableRow = null
+    let alreadyEditableRow = null;
     this.data = data.map((row, index) => {
       row.tableData = { ...row.tableData, id: index };
       if (row.tableData.checked) {
