@@ -6,7 +6,7 @@ export default class DataManager {
   applyFilters = false;
   applySearch = false;
   currentPage = 0;
-  detailPanelType = 'multiple'  
+  detailPanelType = 'multiple'
   lastDetailPanelRow = undefined;
   lastEditingRow = undefined;
   orderBy = -1;
@@ -47,14 +47,26 @@ export default class DataManager {
 
   setData(data) {
     this.selectedCount = 0;
-
+    let alreadyEditableRow = null
     this.data = data.map((row, index) => {
       row.tableData = { ...row.tableData, id: index };
       if (row.tableData.checked) {
         this.selectedCount++;
       }
+      if (
+          this.lastEditingRow
+          && row.id !== undefined
+          && row.id === this.lastEditingRow.id
+          && JSON.stringify({...row, tableData: null}) === JSON.stringify({...this.lastEditingRow, tableData: null})) {
+        alreadyEditableRow = row;
+      }
       return row;
     });
+    if (alreadyEditableRow) {
+      this.changeRowEditing(alreadyEditableRow, 'update');
+    } else {
+      this.changeRowEditing();
+    }
 
     this.filtered = false;
   }
@@ -299,7 +311,7 @@ export default class DataManager {
       if(newGroup.grouping === false || !newGroup.field){
         return;
       }
-      
+
       groups.splice(result.destination.index, 0, newGroup);
     }
     else if (result.destination.droppableId === "headers" && result.source.droppableId === "groups") {
