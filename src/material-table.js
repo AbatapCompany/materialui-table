@@ -306,7 +306,7 @@ export default class MaterialTable extends React.Component {
 
   onEditingApproved = (mode, newData, oldData) => {
     if (this.props.onClickActionButton) {
-      this.props.onClickActionButton(mode + 'Approved');
+      this.props.onClickActionButton(mode + 'Approved', newData, oldData);
     }
     if (mode === "add") {
       this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
@@ -377,7 +377,7 @@ export default class MaterialTable extends React.Component {
 
   onEditingCanceled = (mode, rowData) => {
     if (this.props.onClickActionButton) {
-      this.props.onClickActionButton(mode + 'Cancel');
+      this.props.onClickActionButton(mode + 'Cancel', rowData);
     }
     if (mode === "add") {
       this.setState({ showAddRow: false, tableBodyVersion: this.state.tableBodyVersion + 1 });

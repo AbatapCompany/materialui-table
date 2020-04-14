@@ -47,7 +47,7 @@ export default class DataManager {
 
   setData(data) {
     this.selectedCount = 0;
-    let prevEditableRow = null
+    let alreadyEditableRow = null
     this.data = data.map((row, index) => {
       row.tableData = { ...row.tableData, id: index };
       if (row.tableData.checked) {
@@ -58,12 +58,12 @@ export default class DataManager {
           && row.id !== undefined
           && row.id === this.lastEditingRow.id
           && btoa(row) === btoa(this.lastEditingRow)) {
-        prevEditableRow = row;
+        alreadyEditableRow = row;
       }
       return row;
     });
-    if (prevEditableRow) {
-      this.changeRowEditing(prevEditableRow, 'update');
+    if (alreadyEditableRow) {
+      this.changeRowEditing(alreadyEditableRow, 'update');
     } else {
       this.changeRowEditing();
     }
