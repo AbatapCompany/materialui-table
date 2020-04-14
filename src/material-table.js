@@ -76,7 +76,7 @@ export default class MaterialTable extends React.Component {
     else {
       this.dataManager.changeApplySearch(true);
       this.dataManager.changeApplyFilters(true);
-      this.setData(props.data);
+      this.dataManager.setData(props.data);
     }
     const isInit = !prevProps || prevProps.name !== props.name;
 
@@ -86,10 +86,6 @@ export default class MaterialTable extends React.Component {
     isInit && this.dataManager.changePaging(props.options.paging);
     isInit && this.dataManager.changeParentFunc(props.parentChildData);
     this.dataManager.changeDetailPanelType(props.options.detailPanelType);
-  }
-
-  setData(data) {
-    this.dataManager.setData(data);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -111,7 +107,6 @@ export default class MaterialTable extends React.Component {
           tooltip: localization.addTooltip,
           isFreeAction: true,
           onClick: () => {
-
             if (this.props.onClickActionButton) {
               this.props.onClickActionButton('addStart');
             }
@@ -395,7 +390,7 @@ export default class MaterialTable extends React.Component {
       this.props.data(query).then((result) => {
         query.totalCount = result.totalCount;
         query.page = result.page;
-        this.setData(result.data);
+        this.dataManager.setData(result.data);
         this.setState({
           isLoading: false,
           tableBodyVersion: this.state.tableBodyVersion + 1,
