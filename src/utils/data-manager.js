@@ -57,7 +57,7 @@ export default class DataManager {
           this.lastEditingRow
           && row.id !== undefined
           && row.id === this.lastEditingRow.id
-          && btoa(row) === btoa(this.lastEditingRow)) {
+          && JSON.stringify({...row, tableData: null}) === JSON.stringify({...this.lastEditingRow, tableData: null})) {
         alreadyEditableRow = row;
       }
       return row;
