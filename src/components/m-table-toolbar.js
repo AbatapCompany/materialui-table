@@ -91,7 +91,7 @@ export class MTableToolbar extends React.Component {
     if (this.props.exportTotals && this.props.getAggregation) {
       const totalsRow = columns
       .map((columnDef, index) => {
-        let value = this.props.getAggregation(dataToExport, columnDef);
+        let value = this.props.getAggregation(dataToExport, columnDef, true, true);
 
         if (typeof value === 'object') {
           if (value instanceof Date) {

@@ -845,7 +845,7 @@ export default class DataManager {
     this.paged = true;
   }
 
-  getAggregation = (data, columnDef, lookup = true) => {
+  getAggregation = (data, columnDef, lookup = true, fromExport = false) => {
     const filteredData = this.aggregateChilds
       ? data
       : data.filter(item => !this.getParent(item));
@@ -873,7 +873,7 @@ export default class DataManager {
           return items.reduce((prev, curr) => prev + curr, 0) / items.length;
       }
       case 'custom':
-        return columnDef.render && columnDef.render(filteredData, 'totals');
+        return columnDef.render && columnDef.render(filteredData, fromExport ? 'totals_export' : 'totals');
       default:
         return undefined;
     }
