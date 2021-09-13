@@ -53,7 +53,7 @@ class MTableBody extends React.Component {
         addColumn++;
       }
       return (
-        <TableRow style={{ height: 49 * (this.props.options.paging && this.props.options.emptyRowsWhenPaging ? this.props.pageSize : 1) }} key={'empty-' + 0} >
+        <TableRow style={{ height: 49 * (this.props.options.paging === 'classic' && this.props.options.emptyRowsWhenPaging ? this.props.pageSize : 1) }} key={'empty-' + 0} >
           <TableCell style={{ paddingTop: 0, paddingBottom: 0, textAlign: 'center' }} colSpan={this.props.columns.length + addColumn} key="empty-">
             {localization.emptyDataSourceMessage}
           </TableCell>
@@ -156,7 +156,7 @@ class MTableBody extends React.Component {
       .sort((col1, col2) => col1.tableData.groupOrder - col2.tableData.groupOrder);
 
     let emptyRowCount = 0;
-    if (this.props.options.paging) {
+    if (this.props.options.paging === 'classic') {
       emptyRowCount = this.props.pageSize - renderData.length;
     }
     return (

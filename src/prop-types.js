@@ -142,7 +142,7 @@ export const propTypes = {
     initialPage: PropTypes.number,
     maxBodyHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     loadingType: PropTypes.oneOf(['overlay', 'linear']),
-    paging: PropTypes.bool,
+    paging: PropTypes.oneOf(['classic', 'infinite', 'disabled']),
     pageSize: PropTypes.number,
     pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
     paginationType: PropTypes.oneOf(['normal', 'stepped']),

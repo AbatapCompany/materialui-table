@@ -223,7 +223,7 @@ export interface Options {
   initialPage?: number;
   loadingType?: ('overlay' | 'linear');
   maxBodyHeight?: number | string;
-  paging?: boolean;
+  paging?: ('classic' | 'infinite' | 'disabled');
   grouping?: boolean;
   pageSize?: number;
   pageSizeOptions?: number[];

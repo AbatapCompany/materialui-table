@@ -183,6 +183,64 @@ class App extends Component {
 ReactDOM.render(<App />, document.getElementById("react-div"));
 ```
 
+## Infinite scroll
+
+Here is a example of using material-table with infinite scroll.
+For activating infinite scroll you need to set `maxBodyHeight` less than height of page of content and set `paging: infinite`. Also, you can use callback function `onChangePage` instead of data function, which will be usefull for integration with Redux store.
+
+```jsx
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import MaterialTable from "material-table";
+
+class App extends Component {
+  render() {
+    return (
+      <div style={{ maxWidth: "100%" }}>
+          <MaterialTable
+            title="Infinite Scroll Preview"
+            columns={[
+              {
+                title: 'Avatar',
+                field: 'avatar',
+                render: rowData => (
+                  <img
+                    style={{ height: 36, borderRadius: '50%' }}
+                    src={rowData.avatar}
+                  />
+                ),
+              },
+              { title: 'Id', field: 'id' },
+              { title: 'First Name', field: 'first_name' },
+              { title: 'Last Name', field: 'last_name' },
+            ]}
+            options={{
+              maxBodyHeight: 200,
+              paging: 'infinite',
+            }}
+            data={query => new Promise((resolve, reject) => {
+              let url = 'https://reqres.in/api/users?'
+              url += 'per_page=' + query.pageSize
+              url += '&page=' + (query.page + 1)
+              fetch(url)
+                .then(response => response.json())
+                .then(result => {
+                  resolve({
+                    data: result.data,
+                    page: result.page - 1,
+                    totalCount: result.total,
+                  })
+                })
+            })}
+          />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById("react-div"));
+```
+
 ## Contributing
 
 We'd love to have your helping hand on `material-table`! See [CONTRIBUTING.md](https://github.com/mbrn/material-table/blob/master/.github/CONTRIBUTING.md) for more information on what we're looking for and how to get started.
