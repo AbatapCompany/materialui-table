@@ -12,7 +12,7 @@ export default class DataManager {
   orderBy = -1;
   orderDirection = '';
   pageSize = 5;
-  paging = true;
+  paging = 'classic';
   parentFunc = null;
   searchText = '';
   selectedCount = 0;
@@ -48,8 +48,8 @@ export default class DataManager {
   setData(data) {
     this.selectedCount = 0;
     let alreadyEditableRow = null;
-    this.data = data.map((row, index) => {
-      row.tableData = { ...row.tableData, id: index };
+    const dataMapped = data.map((row, index) => {
+      row.tableData = { ...row.tableData, id: index + this.data.length };
       if (row.tableData.checked) {
         this.selectedCount++;
       }
@@ -62,6 +62,11 @@ export default class DataManager {
       }
       return row;
     });
+    if (this.paging === 'infinite') {
+      this.data = this.data.concat(dataMapped);
+    } else {
+      this.data = dataMapped;
+    }
     if (alreadyEditableRow) {
       this.changeRowEditing(alreadyEditableRow, 'update');
     } else {
@@ -835,7 +840,7 @@ export default class DataManager {
   pageData() {
     this.pagedData = [...this.sortedData];
 
-    if (this.paging) {
+    if (this.paging === 'classic') {
       const startIndex = this.currentPage * this.pageSize;
       const endIndex = startIndex + this.pageSize;
 

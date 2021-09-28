@@ -2,7 +2,7 @@
 import { Table, TableFooter, TableRow, LinearProgress } from '@material-ui/core';
 import DoubleScrollbar from "react-double-scrollbar";
 import * as React from 'react';
-import { MTablePagination, MTableSteppedPagination } from './components';
+import { MTableInfinite, MTablePagination, MTableSteppedPagination } from './components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import DataManager from './utils/data-manager';
 import { debounce } from 'debounce';
@@ -491,7 +491,7 @@ export default class MaterialTable extends React.Component {
   renderFooter() {
     const props = this.getProps();
 
-    if (props.options.paging) {
+    if (props.options.paging === 'classic') {
       const localization = { ...MaterialTable.defaultProps.localization.pagination, ...this.props.localization.pagination };
       return (
         <Table>
@@ -662,19 +662,27 @@ export default class MaterialTable extends React.Component {
               onGroupRemoved={this.onGroupRemoved}
             />
           }
+
           <ScrollBar double={props.options.doubleHorizontalScroll} tableId={this.id} ownProps={this.props}>
             <Droppable droppableId="headers" direction="horizontal">
               {(provided, snapshot) => (
                 <div ref={provided.innerRef}>
-                  <div style={{ maxHeight: props.options.maxBodyHeight, overflowY: 'auto' }}>
+                  <MTableInfinite
+                    paging={props.options.paging}
+                    maxBodyHeight={props.options.maxBodyHeight}
+                    currentPage={this.isRemoteData() ? this.state.query.page : this.state.currentPage}
+                    pageSize={this.state.pageSize}
+                    totalCount={this.isRemoteData() ? this.state.query.totalCount : this.state.data.length}
+                    onChangePage={this.onChangePage}
+                  >
                     {this.renderTable()}
-                  </div>
+                  </MTableInfinite>
                   {provided.placeholder}
                 </div>
               )}
             </Droppable>
-
           </ScrollBar>
+
           {(this.state.isLoading || props.isLoading) && props.options.loadingType === "linear" &&
             <div style={{ position: 'relative', width: '100%' }}>
               <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '100%' }}>

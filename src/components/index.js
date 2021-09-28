@@ -9,6 +9,7 @@ import MTableEditRow from './m-table-edit-row';
 import MTableEditField from './m-table-edit-field';
 import MTableFilterRow from './m-table-filter-row';
 import MTableHeader from './m-table-header';
+import MTableInfinite from './m-table-infinite';
 import MTablePagination from './m-table-pagination';
 import MTableSteppedPagination from './m-table-stepped-pagination';
 import MTableToolbar from './m-table-toolbar';
@@ -27,6 +28,7 @@ export {
   MTableEditField,
   MTableFilterRow,
   MTableHeader,
+  MTableInfinite,
   MTablePagination,
   MTableSteppedPagination,
   MTableToolbar,

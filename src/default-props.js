@@ -83,7 +83,7 @@ export const defaultProps = {
     fixedColumns: 0,
     header: true,
     loadingType: 'overlay',
-    paging: true,
+    paging: 'classic',
     pageSize: 5,
     pageSizeOptions: [5, 10, 20],
     paginationType: 'normal',
