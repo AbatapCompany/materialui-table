@@ -71,7 +71,8 @@ for (let i = 0; i < 1; i++) {
 
 const App = () => {
   const tableRef = React.createRef();
-  const tableInfiniteRef = React.createRef();
+  const tableInfiniteAppendRef = React.createRef();
+  const tableInfiniteReplaceRef = React.createRef();
 
   const [ filterType, setFilterType ] = React.useState('header');
 
@@ -251,10 +252,10 @@ const App = () => {
                 })
             })}
           />
-          <button onClick={() => tableInfiniteRef.current.onQueryChange()}>Refresh infinite table</button>
+          <button onClick={() => tableInfiniteAppendRef.current.onQueryChange()}>Refresh infinite table</button>
           <MaterialTable
               title="Infinite Scroll Preview Append"
-              tableRef={tableInfiniteRef}
+              tableRef={tableInfiniteAppendRef}
               columns={[
                 {
                   title: 'Avatar',
@@ -291,10 +292,10 @@ const App = () => {
                     })
               })}
           />
-          <button onClick={() => tableInfiniteRef.current.onQueryChange()}>Refresh infinite table</button>
+          <button onClick={() => tableInfiniteReplaceRef.current.onQueryChange()}>Refresh infinite table</button>
           <MaterialTable
             title="Infinite Scroll Preview Replace"
-            tableRef={tableInfiniteRef}
+            tableRef={tableInfiniteReplaceRef}
             columns={[
               {
                 title: 'Avatar',
@@ -316,7 +317,6 @@ const App = () => {
               infinityType: 'replace',
             }}
             data={query => new Promise((resolve, reject) => {
-              console.log('query = ', query)
               let url = 'https://reqres.in/api/users?'
               url += 'per_page=' + (query.page + 2) * query.pageSize
               url += '&page=1'
