@@ -187,6 +187,7 @@ ReactDOM.render(<App />, document.getElementById("react-div"));
 
 Here is a example of using material-table with infinite scroll.
 For activating infinite scroll you need to set `maxBodyHeight` less than height of page of content and set `paging: infinite`. Also, you can use callback function `onChangePage` instead of data function, which will be usefull for integration with Redux store.
+If `infinityType` === 'append' (default value) response data is added to the end of the list, otherwise with 'replace' value the data is overwritten
 
 ```jsx
 import React, { Component } from "react";
@@ -217,6 +218,7 @@ class App extends Component {
             options={{
               maxBodyHeight: 200,
               paging: 'infinite',
+              infinityType: 'append',
             }}
             data={query => new Promise((resolve, reject) => {
               let url = 'https://reqres.in/api/users?'
