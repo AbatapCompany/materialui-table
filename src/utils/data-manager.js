@@ -13,6 +13,7 @@ export default class DataManager {
   orderDirection = '';
   pageSize = 5;
   paging = 'classic';
+  infinityChangePropPolicy = 'append';
   parentFunc = null;
   searchText = '';
   selectedCount = 0;
@@ -62,7 +63,7 @@ export default class DataManager {
       }
       return row;
     });
-    if (this.paging === 'infinite') {
+    if (this.paging === 'infinite' && this.infinityChangePropPolicy === 'append') {
       this.data = this.data.concat(dataMapped);
     } else {
       this.data = dataMapped;
@@ -119,6 +120,10 @@ export default class DataManager {
   changePaging(paging) {
     this.paging = paging;
     this.paged = false;
+  }
+
+  changeInfinityType(infinityChangePropPolicy) {
+    this.infinityChangePropPolicy = infinityChangePropPolicy;
   }
 
   changeCurrentPage(currentPage) {

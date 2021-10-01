@@ -71,6 +71,8 @@ for (let i = 0; i < 1; i++) {
 
 const App = () => {
   const tableRef = React.createRef();
+  const tableInfiniteAppendRef = React.createRef();
+  const tableInfiniteReplaceRef = React.createRef();
 
   const [ filterType, setFilterType ] = React.useState('header');
 
@@ -250,8 +252,50 @@ const App = () => {
                 })
             })}
           />
+          <button onClick={() => tableInfiniteAppendRef.current.onQueryChange()}>Refresh infinite table</button>
           <MaterialTable
-            title="Infinite Scroll Preview"
+              title="Infinite Scroll Preview Append"
+              tableRef={tableInfiniteAppendRef}
+              columns={[
+                {
+                  title: 'Avatar',
+                  field: 'avatar',
+                  render: rowData => (
+                      <img
+                          style={{ height: 36, borderRadius: '50%' }}
+                          src={rowData.avatar}
+                      />
+                  ),
+                },
+                { title: 'Id', field: 'id' },
+                { title: 'First Name', field: 'first_name' },
+                { title: 'Last Name', field: 'last_name' },
+              ]}
+              options={{
+                maxBodyHeight: 200,
+                paging: 'infinite',
+                infinityChangePropPolicy: 'append',
+              }}
+              data={query => new Promise((resolve, reject) => {
+                let url = 'https://reqres.in/api/users?'
+                url += 'per_page=' + query.pageSize
+                url += '&page=' + (query.page + 1)
+                url += '&delay=3'
+                fetch(url)
+                    .then(response => response.json())
+                    .then(result => {
+                      resolve({
+                        data: result.data,
+                        page: result.page - 1,
+                        totalCount: result.total,
+                      })
+                    })
+              })}
+          />
+          <button onClick={() => tableInfiniteReplaceRef.current.onQueryChange()}>Refresh infinite table</button>
+          <MaterialTable
+            title="Infinite Scroll Preview Replace"
+            tableRef={tableInfiniteReplaceRef}
             columns={[
               {
                 title: 'Avatar',
@@ -270,11 +314,13 @@ const App = () => {
             options={{
               maxBodyHeight: 200,
               paging: 'infinite',
+              infinityChangePropPolicy: 'replace',
             }}
             data={query => new Promise((resolve, reject) => {
               let url = 'https://reqres.in/api/users?'
-              url += 'per_page=' + query.pageSize
-              url += '&page=' + (query.page + 1)
+              url += 'per_page=' + (query.page + 2) * query.pageSize
+              url += '&page=1'
+              url += '&delay=3'
               fetch(url)
                 .then(response => response.json())
                 .then(result => {

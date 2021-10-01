@@ -224,6 +224,7 @@ export interface Options {
   loadingType?: ('overlay' | 'linear');
   maxBodyHeight?: number | string;
   paging?: ('classic' | 'infinite' | 'disabled');
+  infinityChangePropPolicy?: ('append' | 'replace');
   grouping?: boolean;
   pageSize?: number;
   pageSizeOptions?: number[];
