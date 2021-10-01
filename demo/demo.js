@@ -274,7 +274,7 @@ const App = () => {
               options={{
                 maxBodyHeight: 200,
                 paging: 'infinite',
-                infinityType: 'append',
+                infinityChangePropPolicy: 'append',
               }}
               data={query => new Promise((resolve, reject) => {
                 let url = 'https://reqres.in/api/users?'
@@ -314,7 +314,7 @@ const App = () => {
             options={{
               maxBodyHeight: 200,
               paging: 'infinite',
-              infinityType: 'replace',
+              infinityChangePropPolicy: 'replace',
             }}
             data={query => new Promise((resolve, reject) => {
               let url = 'https://reqres.in/api/users?'
