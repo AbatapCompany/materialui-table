@@ -1,28 +1,32 @@
-/* eslint-disable no-unused-vars */
-import { Icon, IconButton, withStyles, Tooltip, Hidden, Typography, Button } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import * as React from 'react';
-/* eslint-enable no-unused-vars */
+import Icon from '@mui/material/Icon';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Hidden from '@mui/material/Hidden';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import { withStyles } from '@mui/styles';
+import PropTypes from 'prop-types';
 
 class MTablePaginationInner extends React.Component {
   handleFirstPageButtonClick = event => {
-    this.props.onChangePage(event, 0);
+    this.props.onPageChange(event, 0);
   };
 
   handleBackButtonClick = event => {
-    this.props.onChangePage(event, this.props.page - 1);
+    this.props.onPageChange(event, this.props.page - 1);
   };
 
   handleNextButtonClick = event => {
-    this.props.onChangePage(event, this.props.page + 1);
+    this.props.onPageChange(event, this.props.page + 1);
   };
 
   handleNumberButtonClick = number => event => {
-    this.props.onChangePage(event, number);
+    this.props.onPageChange(event, number);
   };
 
   handleLastPageButtonClick = event => {
-    this.props.onChangePage(
+    this.props.onPageChange(
       event,
       Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1)
     );
@@ -102,7 +106,7 @@ const actionsStyles = theme => ({
 });
 
 MTablePaginationInner.propTypes = {
-  onChangePage: PropTypes.func,
+  onPageChange: PropTypes.func,
   page: PropTypes.number,
   count: PropTypes.number,
   rowsPerPage: PropTypes.number,

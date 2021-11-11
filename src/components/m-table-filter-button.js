@@ -1,16 +1,24 @@
-/* eslint-disable no-unused-vars */
 import * as React from 'react';
-import {
-    TextField, FormControl, Checkbox,
-    ListItemText, InputAdornment, withStyles,
-    Popover, List, ListItem, Divider, Link, Typography
-} from '@material-ui/core';
-import ClearIcon from '@material-ui/icons/Clear';
-import IconButton from '@material-ui/core/IconButton';
-import { MuiPickersUtilsProvider, TimePicker, DatePicker, DateTimePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import InputAdornment from '@mui/material/InputAdornment';
+import Popover from '@mui/material/Popover';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import TimePicker from '@mui/lab/TimePicker';
+import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
-/* eslint-enable no-unused-vars */
 
 class MTableFilterButton extends React.Component {
     constructor(props) {
@@ -204,7 +212,7 @@ class MTableFilterButton extends React.Component {
                                     <ClearIcon />
                                 </IconButton>
                             }
-                                <Typography component="p" variant="body1" color="textSecondary" >
+                                <Typography component="p" variant="body1" >
                                     ]
                                 </Typography>
                             </InputAdornment>
@@ -255,33 +263,39 @@ class MTableFilterButton extends React.Component {
         if (columnDef.type === 'date') {
             dateInputElement = (
                 <DatePicker
+                    label=""
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
+                    renderInput={(params) => <TextField {...params} />}
                     clearable
                 />
             );
         } else if (columnDef.type === 'datetime') {
             dateInputElement = (
                 <DateTimePicker
+                    label=""
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
+                    renderInput={(params) => <TextField {...params} />}
                     clearable
                 />
             );
         } else if (columnDef.type === 'time') {
             dateInputElement = (
                 <TimePicker
+                    label=""
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
+                    renderInput={(params) => <TextField {...params} />}
                     clearable
                 />
             );
         }
 
         return (
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
                 {dateInputElement}
-            </MuiPickersUtilsProvider>
+            </LocalizationProvider>
         );
     }
     render() {

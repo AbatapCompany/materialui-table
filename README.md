@@ -99,7 +99,7 @@ If your environment support tree-shaking you can also import the icons this way:
 import { AddBox, ArrowUpward } from "@material-ui/icons";
 ```
 
-Note: Importing named exports in this way will result in the code for _every icon_ being included in your project, so is not recommended unless you configure [tree-shaking](https://webpack.js.org/guides/tree-shaking/). It may also impact Hot Module Reload performance. Source: [@material-ui/icons](https://github.com/mui-org/material-ui/blob/master/packages/material-ui-icons/README.md#imports)
+Note: Importing named exports in this way will result in the code for _every icon_ being included in your project, so is not recommended unless you configure [tree-shaking](https://webpack.js.org/guides/tree-shaking/).
 
 Example
 
@@ -186,7 +186,7 @@ ReactDOM.render(<App />, document.getElementById("react-div"));
 ## Infinite scroll
 
 Here is a example of using material-table with infinite scroll.
-For activating infinite scroll you need to set `maxBodyHeight` less than height of page of content and set `paging: infinite`. Also, you can use callback function `onChangePage` instead of data function, which will be usefull for integration with Redux store.
+For activating infinite scroll you need to set `maxBodyHeight` less than height of page of content and set `paging: infinite`. Also, you can use callback function `onPageChange` instead of data function, which will be usefull for integration with Redux store.
 If `infinityChangePropPolicy` === 'append' (default value) response data is added to the end of the list, otherwise with 'replace' value the data is overwritten
 
 ```jsx

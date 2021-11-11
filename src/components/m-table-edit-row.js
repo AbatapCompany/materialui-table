@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
-import { Checkbox, TableCell, TableRow, IconButton, Icon, Tooltip, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import * as React from 'react';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
 import { byString, setByString } from '../utils';
-/* eslint-enable no-unused-vars */
-
 
 export default class MTableEditRow extends React.Component {
 

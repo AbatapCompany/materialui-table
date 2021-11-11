@@ -1,13 +1,12 @@
-import { Grid, MuiThemeProvider, Button, Switch } from '@material-ui/core';
-import { createMuiTheme } from '@material-ui/core/styles';
-import React, { Component } from 'react';
+import { Grid, Switch } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import MaterialTable from '../src';
 
 let direction = 'ltr';
-// direction = 'rtl';
-const theme = createMuiTheme({
-  direction: direction,
+const theme = createTheme({
+  direction,
   palette: {
     type: 'light'
   }
@@ -156,7 +155,7 @@ const App = () => {
 
   return (
     <>
-      <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
         <Grid component="label" container alignItems="center" spacing={1}>
             <Grid item>Filter type: Header</Grid>
             <Grid item>
@@ -251,46 +250,6 @@ const App = () => {
                   })
                 })
             })}
-          />
-          <button onClick={() => tableInfiniteAppendRef.current.onQueryChange()}>Refresh infinite table</button>
-          <MaterialTable
-              title="Infinite Scroll Preview Append"
-              tableRef={tableInfiniteAppendRef}
-              columns={[
-                {
-                  title: 'Avatar',
-                  field: 'avatar',
-                  render: rowData => (
-                      <img
-                          style={{ height: 36, borderRadius: '50%' }}
-                          src={rowData.avatar}
-                      />
-                  ),
-                },
-                { title: 'Id', field: 'id' },
-                { title: 'First Name', field: 'first_name' },
-                { title: 'Last Name', field: 'last_name' },
-              ]}
-              options={{
-                maxBodyHeight: 200,
-                paging: 'infinite',
-                infinityChangePropPolicy: 'append',
-              }}
-              data={query => new Promise((resolve, reject) => {
-                let url = 'https://reqres.in/api/users?'
-                url += 'per_page=' + query.pageSize
-                url += '&page=' + (query.page + 1)
-                url += '&delay=3'
-                fetch(url)
-                    .then(response => response.json())
-                    .then(result => {
-                      resolve({
-                        data: result.data,
-                        page: result.page - 1,
-                        totalCount: result.total,
-                      })
-                    })
-              })}
           />
           <button onClick={() => tableInfiniteReplaceRef.current.onQueryChange()}>Refresh infinite table</button>
           <MaterialTable
@@ -465,7 +424,7 @@ const App = () => {
             onChangeColumnGroups={(items) => {console.log('onChangeColumnGroups', items)} }
           />
         </div>
-      </MuiThemeProvider>
+      </ThemeProvider>
     </>
   );
 };
@@ -474,5 +433,3 @@ ReactDOM.render(
   <App />,
   document.getElementById('app')
 );
-
-module.hot.accept();
