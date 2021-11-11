@@ -1,9 +1,12 @@
-/* eslint-disable no-unused-vars */
-import { Checkbox, TableCell, TableRow, IconButton, Icon, Tooltip, withStyles } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import * as React from 'react';
-/* eslint-enable no-unused-vars */
-
+import Checkbox from '@mui/material/Checkbox';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import IconButton from '@mui/material/IconButton';
+import Icon from '@mui/material/Icon';
+import Tooltip from '@mui/material/Tooltip';
+import { withStyles } from '@mui/styles';
+import PropTypes from 'prop-types';
 
 class MTableBodyRow extends React.Component {
   renderColumns() {

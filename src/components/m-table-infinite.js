@@ -6,7 +6,7 @@ import useSize from 'ahooks/es/useSize';
 
 export const MTableInfinite = (props) => {
 
-  const threshold = props.threshold ?? props.maxBodyHeight * 1.5;
+  const threshold = props.threshold ? props.threshold : props.maxBodyHeight * 1.5;
 
   const containerRef = useRef(null);
   const scroll = useScroll(containerRef);
@@ -27,7 +27,7 @@ export const MTableInfinite = (props) => {
       if (sizes.height - (scroll.top + props.maxBodyHeight) < threshold) {
         if (!isScrolled) {
           setScrolled(true);
-          props.onChangePage(undefined, nextPage);
+          props.onPageChange(undefined, nextPage);
         }
       } else {
         setScrolled(false);
@@ -60,7 +60,7 @@ MTableInfinite.propTypes = {
   currentPage: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
   totalCount: PropTypes.number,
-  onChangePage: PropTypes.func,
+  onPageChange: PropTypes.func,
 };
 
 export default MTableInfinite;

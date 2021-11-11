@@ -1,6 +1,8 @@
-import { TableCell, TableRow, withStyles } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import * as React from 'react';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import { withStyles } from '@mui/styles';
+import PropTypes from 'prop-types';
 
 class MTableTotalsRow extends React.Component {
   getStyle = (value, columnDef) => {

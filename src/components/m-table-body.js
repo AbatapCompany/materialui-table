@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
-import { TableBody, TableCell, TableRow } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import * as React from 'react';
-/* eslint-enable no-unused-vars */
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import PropTypes from 'prop-types';
 
 const isEqual = (objA, objB) => {
   if (objA === objB) {
@@ -24,7 +24,6 @@ const isEqual = (objA, objB) => {
   // Test for A's keys different from B.
   var bHasOwnProperty = hasOwnProperty.bind(objB);
   for (var i = 0; i < keysA.length; i++) {
-    // console.log('compared field', keysA[i]);
     if (!bHasOwnProperty(keysA[i]) || !isEqual(objA[keysA[i]], objB[keysA[i]])) {
       return false;
     }

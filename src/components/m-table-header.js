@@ -1,15 +1,16 @@
-/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import PropTypes from 'prop-types';
-import {
-  TableHead, TableRow, TableCell,
-  TableSortLabel, Checkbox, withStyles
-} from '@material-ui/core';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { Draggable } from 'react-beautiful-dnd';
+import { withStyles } from '@mui/styles';
+import PropTypes from 'prop-types';
 
 const defaultCellScope = 'col';
-/* eslint-enable no-unused-vars */
+
 export class MTableHeader extends React.Component {
   rootHeaders = {};
   rootClassNames = {};

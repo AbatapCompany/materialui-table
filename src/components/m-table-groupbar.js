@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
-import { Icon, Toolbar, Chip, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import Toolbar from '@mui/material/Toolbar';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-/* eslint-enable no-unused-vars */
-
 
 class MTableGroupbar extends React.Component {
   constructor(props) {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconProps } from '@material-ui/core/Icon';
+import { IconProps } from '@mui/material/Icon';
 import { string } from 'prop-types';
 
 export interface MaterialTableProps {
@@ -21,8 +21,8 @@ export interface MaterialTableProps {
   options?: Options;
   parentChildData?: (row: any, rows: any[]) => any;
   localization?: Localization;
-  onChangeRowsPerPage?: (pageSize: number) => void;
-  onChangePage?: (page: number) => void;
+  onRowsPerPageChange?: (pageSize: number) => void;
+  onPageChange?: (page: number) => void;
   onOrderChange?: (orderBy: number, orderDirection: ("asc" | "desc")) => void;
   onRowClick?: (event?: React.MouseEvent, rowData?: any, toggleDetailPanel?: (panelIndex?: number) => void) => void;
   onRowSelected?: (rowData: any) => void;

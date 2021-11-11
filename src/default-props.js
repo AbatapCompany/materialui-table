@@ -1,11 +1,11 @@
 import React from 'react';
-import { CircularProgress, Icon, Paper, TablePagination } from '@material-ui/core';
+import { CircularProgress, Icon, Paper, TablePagination } from '@mui/material';
 import * as MComponents from './components';
 import PropTypes from 'prop-types';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { alpha } from '@mui/material/styles';
 
 const OverlayLoading = props => (
-  <div style={{ display: 'table', width: '100%', height: '100%', backgroundColor: fade(props.theme.palette.background.paper, 0.7) }}>
+  <div style={{ display: 'table', width: '100%', height: '100%', backgroundColor: alpha(props.theme.palette.background.paper, 0.7) }}>
     <div style={{ display: 'table-cell', width: '100%', height: '100%', verticalAlign: 'middle', textAlign: 'center' }}>
       <CircularProgress />
     </div>

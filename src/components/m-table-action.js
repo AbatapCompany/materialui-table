@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, IconButton, Tooltip } from '@material-ui/core';
-/* eslint-enable no-unused-vars */
+import Icon from '@mui/material/Icon';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 class MTableAction extends React.Component {
   render() {
@@ -28,7 +28,6 @@ class MTableAction extends React.Component {
     const button = (
       <span>
         <IconButton
-          color="inherit"
           disabled={action.disabled}
           onClick={(event) => handleOnClick(event)}
         >

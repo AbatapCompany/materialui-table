@@ -1,14 +1,22 @@
-/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  TableCell, TableRow, TextField,
-  FormControl, Select, Input,
-  MenuItem, Checkbox, ListItemText,
-  InputAdornment, Icon, Tooltip,
-} from '@material-ui/core';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, TimePicker, DatePicker, DateTimePicker } from '@material-ui/pickers';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Input from '@mui/material/Input';
+import Icon from '@mui/material/Icon';
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import InputAdornment from '@mui/material/InputAdornment';
+import Tooltip from '@mui/material/Tooltip';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import TimePicker from '@mui/lab/TimePicker';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -65,6 +73,7 @@ class MTableFilterRow extends React.Component {
 
   renderDefaultFilter = (columnDef) => {
     const localization = { ...MTableFilterRow.defaultProps.localization, ...this.props.localization };
+    const FilterIcon = this.props.icons.Filter;
     return (
       <TextField
         style={columnDef.type === 'numeric' ? { float: 'right' } : {}}
@@ -77,7 +86,7 @@ class MTableFilterRow extends React.Component {
           startAdornment: (
             <InputAdornment position="start">
               <Tooltip title={localization.filterTooltip}>
-                <this.props.icons.Filter />
+                <FilterIcon />
               </Tooltip>
             </InputAdornment>
           )
@@ -93,33 +102,39 @@ class MTableFilterRow extends React.Component {
     if (columnDef.type === 'date') {
       dateInputElement = (
         <DatePicker
+          label=""
           value={columnDef.tableData.filterValue || null}
           onChange={onDateInputChange}
+          renderInput={(params) => <TextField {...params} />}
           clearable
         />
       );
     } else if (columnDef.type === 'datetime') {
       dateInputElement = (
         <DateTimePicker
+          label=""
           value={columnDef.tableData.filterValue || null}
           onChange={onDateInputChange}
+          renderInput={(params) => <TextField {...params} />}
           clearable
         />
       );
     } else if (columnDef.type === 'time') {
       dateInputElement = (
         <TimePicker
+          label=""
           value={columnDef.tableData.filterValue || null}
           onChange={onDateInputChange}
+          renderInput={(params) => <TextField {...params} />}
           clearable
         />
       );
     }
 
     return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         {dateInputElement}
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     );
   }
 

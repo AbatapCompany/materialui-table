@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { TextField, Checkbox, Select, MenuItem } from '@material-ui/core';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, TimePicker, DatePicker, DateTimePicker } from '@material-ui/pickers';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import TimePicker from '@mui/lab/TimePicker';
 import PropTypes from 'prop-types';
 
 class MTableEditField extends React.Component {
@@ -46,12 +52,13 @@ class MTableEditField extends React.Component {
 
   renderDateField() {
     return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           {...this.getProps()}
           format="dd.MM.yyyy"
           value={this.props.value || null}
           onChange={this.props.onChange}
+          renderInput={(params) => <TextField {...params} />}
           clearable
           InputProps={{
             style: {
@@ -59,18 +66,19 @@ class MTableEditField extends React.Component {
             }
           }}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     );
   }
 
   renderTimeField() {
     return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <TimePicker
           {...this.getProps()}
           format="HH:mm:ss"
           value={this.props.value || null}
           onChange={this.props.onChange}
+          renderInput={(params) => <TextField {...params} />}
           clearable
           InputProps={{
             style: {
@@ -78,18 +86,19 @@ class MTableEditField extends React.Component {
             }
           }}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     );
   }
 
   renderDateTimeField() {
     return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DateTimePicker
           {...this.getProps()}
           format="dd.MM.yyyy HH:mm:ss"
           value={this.props.value || null}
           onChange={this.props.onChange}
+          renderInput={(params) => <TextField {...params} />}
           clearable
           InputProps={{
             style: {
@@ -97,7 +106,7 @@ class MTableEditField extends React.Component {
             }
           }}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     );
   }
 

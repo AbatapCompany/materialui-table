@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Table, TableFooter, TableRow, LinearProgress } from '@material-ui/core';
+import { Table, TableFooter, TableRow, LinearProgress } from '@mui/material';
 import DoubleScrollbar from "react-double-scrollbar";
 import * as React from 'react';
 import { MTableInfinite, MTablePagination, MTableSteppedPagination } from './components';
@@ -213,23 +213,23 @@ export default class MaterialTable extends React.Component {
     }
   }
 
-  onChangePage = (event, page) => {
+  onPageChange = (event, page) => {
     if (this.isRemoteData()) {
       const query = { ...this.state.query };
       query.page = page;
       this.onQueryChange(query, () => {
-        this.props.onChangePage && this.props.onChangePage(page);
+        this.props.onPageChange && this.props.onPageChange(page);
       });
     }
     else {
       this.dataManager.changeCurrentPage(page);
       this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
-        this.props.onChangePage && this.props.onChangePage(page);
+        this.props.onPageChange && this.props.onPageChange(page);
       });
     }
   }
 
-  onChangeRowsPerPage = (event) => {
+  onRowsPerPageChange = (event) => {
     const pageSize = event.target.value;
 
     this.dataManager.changePageSize(pageSize);
@@ -239,13 +239,13 @@ export default class MaterialTable extends React.Component {
       query.pageSize = event.target.value;
       query.page = 0;
       this.onQueryChange(query, () => {
-        this.props.onChangeRowsPerPage && this.props.onChangeRowsPerPage(pageSize);
+        this.props.onRowsPerPageChange && this.props.onRowsPerPageChange(pageSize);
       });
     }
     else {
       this.dataManager.changeCurrentPage(0);
       this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
-        this.props.onChangeRowsPerPage && this.props.onChangeRowsPerPage(pageSize);
+        this.props.onRowsPerPageChange && this.props.onRowsPerPageChange(pageSize);
       });
     }
   }
@@ -515,8 +515,8 @@ export default class MaterialTable extends React.Component {
                   renderValue: value => <div style={{ padding: '0px 5px' }}>{value + ' ' + localization.labelRowsSelect + ' '}</div>
                 }}
                 page={this.isRemoteData() ? this.state.query.page : this.state.currentPage}
-                onChangePage={this.onChangePage}
-                onChangeRowsPerPage={this.onChangeRowsPerPage}
+                onPageChange={this.onPageChange}
+                onRowsPerPageChange={this.onRowsPerPageChange}
                 ActionsComponent={(subProps) => props.options.paginationType === 'normal' ?
                   <MTablePagination {...subProps} icons={props.icons} localization={localization} showFirstLastPageButtons={props.options.showFirstLastPageButtons}/> :
                   <MTableSteppedPagination {...subProps} icons={props.icons} localization={localization} />}
@@ -674,7 +674,7 @@ export default class MaterialTable extends React.Component {
                     currentPage={this.isRemoteData() ? this.state.query.page : this.state.currentPage}
                     pageSize={this.state.pageSize}
                     totalCount={this.isRemoteData() ? this.state.query.totalCount : this.state.data.length}
-                    onChangePage={this.onChangePage}
+                    onPageChange={this.onPageChange}
                   >
                     {this.renderTable()}
                   </MTableInfinite>
@@ -699,22 +699,24 @@ export default class MaterialTable extends React.Component {
             </div>
           }
         </props.components.Container>
-        <style>{`.totals-row td.MuiTableCell-footer:before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: -1px;
-      width: 100%;
-      border-bottom: 1px solid rgba(224, 224, 224, 1);
-    }
-    tbody td.cell-fixed:after,  thead th.MuiTableCell-head:after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -1px;
-      width: 100%;
-      border-bottom: 1px solid rgba(224, 224, 224, 1);
-    }`}</style>
+        <style>{
+          `.totals-row td.MuiTableCell-footer:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -1px;
+            width: 100%;
+            border-bottom: 1px solid rgba(224, 224, 224, 1);
+          }
+          tbody td.cell-fixed:after,  thead th.MuiTableCell-head:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 100%;
+            border-bottom: 1px solid rgba(224, 224, 224, 1);
+          }`
+        }</style>
       </DragDropContext>
     );
   }

@@ -1,13 +1,21 @@
-/* eslint-disable no-unused-vars */
+import * as React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { Checkbox, FormControlLabel, Icon, IconButton, InputAdornment, Menu, MenuItem, TextField,
-  Toolbar, Tooltip, Typography, withStyles, Divider  } from '@material-ui/core';
-import { lighten } from '@material-ui/core/styles/colorManipulator';
+import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import { withStyles } from '@mui/styles';
+import { lighten } from '@mui/material/styles';
 import classNames from 'classnames';
 import { CsvBuilder } from 'filefy';
 import PropTypes, { oneOf } from 'prop-types';
-import * as React from 'react';
-/* eslint-enable no-unused-vars */
 
 export class MTableToolbar extends React.Component {
   constructor(props) {
@@ -181,12 +189,11 @@ export class MTableToolbar extends React.Component {
           value={this.props.searchText}
           onChange={event => this.props.onSearchChanged(event.target.value)}
           placeholder={localization.searchPlaceholder}
-          color="inherit"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
                 <Tooltip title={localization.searchTooltip}>
-                  <this.props.icons.Search color="inherit" fontSize="small" />
+                  <this.props.icons.Search fontSize="small" />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -196,7 +203,7 @@ export class MTableToolbar extends React.Component {
                   disabled={!this.props.searchText}
                   onClick={() => this.props.onSearchChanged("")}
                 >
-                  <this.props.icons.ResetSearch color="inherit" fontSize="small" />
+                  <this.props.icons.ResetSearch fontSize="small" />
                 </IconButton>
               </InputAdornment>
             ),
@@ -262,7 +269,6 @@ export class MTableToolbar extends React.Component {
           <span>
             <Tooltip title={localization.showColumnsTitle}>
               <IconButton
-                color="inherit"
                 onClick={event => this.setState({ columnsButtonAnchorEl: event.currentTarget })}
                 aria-label={localization.showColumnsAriaLabel}>
 
@@ -286,7 +292,6 @@ export class MTableToolbar extends React.Component {
           <span>
             <Tooltip title={localization.exportTitle}>
               <IconButton
-                color="inherit"
                 onClick={this.exportCsv}
                 // onClick={event => this.setState({ exportButtonAnchorEl: event.currentTarget })}
                 aria-label={localization.exportAriaLabel}>
