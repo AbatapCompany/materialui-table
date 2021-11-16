@@ -1,23 +1,20 @@
 {
   "name": "@softmedialab/materialui-table",
-  "version": "1.0.50",
+  "version": "1.1.0",
   "description": "Datatable for React based on https://material-table.com with additional features",
   "main": "dist/index.js",
-  "types": "types/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "types"
   ],
-  "babel": {
-    "extends": "./configs/.babelrc"
-  },
   "scripts": {
-    "start": "webpack-dev-server --config ./demo/webpack.config.js --mode development",
-    "build": "babel src --out-dir dist",
+    "start": "webpack serve --config ./demo/webpack.config.js --mode development",
+    "build": "tsc",
     "lint": "npm run eslint && npm run tsc",
-    "eslint": "eslint src/** -c ./configs/.eslintrc",
-    "tsc": "tsc --noEmit --lib es6,dom --skipLibCheck types/index.d.ts",
-    "lint:fix": "eslint src/** --fix"
+    "eslint": "eslint src/**",
+    "lint:fix": "eslint src/** --fix",
+    "check": "tsc --noEmit --lib es6,dom --skipLibCheck types/index.d.ts"
   },
   "repository": {
     "type": "git",
@@ -37,18 +34,14 @@
   },
   "homepage": "https://github.com/AbatapCompany/materialui-table#readme",
   "devDependencies": {
-    "@babel/cli": "7.16.0",
-    "@babel/core": "7.16.0",
-    "@babel/plugin-proposal-class-properties": "7.1.0",
-    "@babel/plugin-proposal-object-rest-spread": "7.0.0",
-    "@babel/plugin-transform-runtime": "7.1.0",
-    "@babel/preset-env": "7.2.0",
-    "@babel/preset-react": "7.0.0",
-    "babel-loader": "8.0.4",
-    "babel-polyfill": "6.26.0",
-    "eslint": "7.12.1",
+    "@types/debounce": "1.2.1",
+    "@types/lodash": "4.14.176",
+    "@types/react-beautiful-dnd": "13.1.2",
+    "@types/react-dom": "17.0.11",
+    "@typescript-eslint/eslint-plugin": "5.3.1",
+    "@typescript-eslint/parser": "5.3.1",
+    "eslint": "7.26.0",
     "eslint-config-standard": "16.0.3",
-    "eslint-plugin-babel": "5.3.1",
     "eslint-plugin-import": "2.25.3",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "5.1.1",
@@ -56,10 +49,11 @@
     "husky": "7.0.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "ts-loader": "9.2.6",
     "typescript": "4.4.2",
-    "webpack": "4.27.1",
-    "webpack-cli": "3.1.2",
-    "webpack-dev-server": "3.1.10"
+    "webpack": "5.63.0",
+    "webpack-cli": "4.9.1",
+    "webpack-dev-server": "4.4.0"
   },
   "dependencies": {
     "@emotion/react": "11.5.0",
@@ -75,6 +69,7 @@
     "date-fns": "2.25.0",
     "debounce": "1.2.1",
     "filefy": "0.1.11",
+    "lodash": "4.17.21",
     "prop-types": "15.7.2",
     "react-beautiful-dnd": "13.1.0",
     "react-double-scrollbar": "0.0.15"

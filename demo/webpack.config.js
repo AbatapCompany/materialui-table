@@ -1,31 +1,27 @@
-const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
-  entry: ['babel-polyfill', './demo/demo.js'],
+  entry: ['./demo/demo.tsx'],
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
+        use: ['ts-loader']
       }
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   output: {
-    path: __dirname + '/dist',
+    path: path.join(__dirname, '/dist'),
     publicPath: '/',
     filename: 'bundle.js'
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ],
   devServer: {
-    contentBase: './demo',
-    hot: true,
-    disableHostCheck: true
-  },
-  devtool: 'source-map'
+    static: './demo',
+    port: 8081,
+    hot: true
+  }
 };
