@@ -1,21 +1,24 @@
 /* eslint-disable max-lines */
-import React, { Component, ForwardedRef } from 'react';
+import React, { ChangeEvent, Component, ForwardedRef } from 'react';
 import Table from '@mui/material/Table';
 import TableFooter from '@mui/material/TableFooter';
 import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import LinearProgress from '@mui/material/LinearProgress';
 import Icon from '@mui/material/Icon';
-import * as MComponents from './components';
+import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import DataManager from './utils/data-manager';
 import { debounce } from 'debounce';
+import * as MComponents from './components';
+import DataManager from './utils/data-manager';
+import { MaterialTableProps } from 'models/material-table.model';
+import { SortDirection } from '@mui/material';
 
 let tableCounter = 1;
 
-export default class MaterialTable extends Component<any, any> {
+export default class MaterialTable extends Component<MaterialTableProps, any> {
 
-    static defaultProps: any = {
+    static defaultProps: Partial<MaterialTableProps> = {
         actions: [],
         classes: {},
         columns: [],
@@ -132,7 +135,7 @@ export default class MaterialTable extends Component<any, any> {
     private dataManager = new DataManager();
     private id: string;
 
-    constructor(props: any) {
+    constructor(props: MaterialTableProps) {
         super(props);
         this.id = `m_table_${tableCounter++}`;
 
@@ -172,34 +175,40 @@ export default class MaterialTable extends Component<any, any> {
         });
     }
 
-    onQueryChange = (query: any, callback?: any) => {
-        query = { ...this.state.query, ...query };
+    onQueryChange = (queryArg: any, fn?: any) => {
+        const query = { ...this.state.query, ...queryArg };
 
         this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
             if (typeof this.props.data === 'function') {
-                this.props.data(query).then((result: any) => {
-                    query.totalCount = result.totalCount;
-                    query.page = result.page;
-                    this.dataManager.setData(result.data);
-                    this.setState({
-                        isLoading: false,
-                        tableBodyVersion: this.state.tableBodyVersion + 1,
-                        ...this.dataManager.getRenderState(),
-                        query
-                    }, () => {
-                        callback && callback();
+                this.props.data(query)
+                    .then((result: any) => {
+                        query.totalCount = result.totalCount;
+                        query.page = result.page;
+                        this.dataManager.setData(result.data);
+                        this.setState({
+                            isLoading: false,
+                            tableBodyVersion: this.state.tableBodyVersion + 1,
+                            ...this.dataManager.getRenderState(),
+                            query
+                        }, () => {
+                            if (typeof fn === 'function') {
+                                fn();
+                            }
+                        });
+                    })
+                    .catch((error) => {
+                        console.error(error);
                     });
-                });
             }
         });
     }
 
-    setDataManagerFields = (props: any, prevProps?: any) => {
+    setDataManagerFields = (props: MaterialTableProps, prevProps?: MaterialTableProps) => {
         let defaultSortColumnIndex = -1;
-        let defaultSortDirection = '';
+        let defaultSortDirection: SortDirection = false;
         if (props) {
-            defaultSortColumnIndex = props.columns.findIndex((a: any): any => a.defaultSort);
-            defaultSortDirection = defaultSortColumnIndex > -1 ? props.columns[defaultSortColumnIndex].defaultSort : '';
+            defaultSortColumnIndex = props.columns.findIndex((a) => a.defaultSort);
+            defaultSortDirection = defaultSortColumnIndex > -1 ? props.columns[defaultSortColumnIndex].defaultSort : false;
         }
 
         this.dataManager.setColumns(props.columns);
@@ -217,15 +226,18 @@ export default class MaterialTable extends Component<any, any> {
             this.dataManager.changeApplyFilters(true);
             this.dataManager.setData(props.data);
         }
-        const isInit = !prevProps || prevProps.name !== props.name;
 
-        isInit && this.dataManager.changeOrder(defaultSortColumnIndex, defaultSortDirection);
-        isInit && this.dataManager.changeCurrentPage(props.options.initialPage ? props.options.initialPage : 0);
-        isInit && this.dataManager.changePageSize(props.options.pageSize);
-        isInit && this.dataManager.changePaging(props.options.paging);
-        isInit && this.dataManager.changeInfinityType(props.options.infinityChangePropPolicy || 'append');
-        isInit && this.dataManager.changeParentFunc(props.parentChildData);
         this.dataManager.changeDetailPanelType(props.options.detailPanelType);
+
+        const isInit = !prevProps || prevProps.name !== props.name;
+        if (isInit) {
+            this.dataManager.changeOrder(defaultSortColumnIndex, defaultSortDirection);
+            this.dataManager.changeCurrentPage(props.options.initialPage ? props.options.initialPage : 0);
+            this.dataManager.changePageSize(props.options.pageSize);
+            this.dataManager.changePaging(props.options.paging);
+            this.dataManager.changeInfinityType(props.options.infinityChangePropPolicy || 'append');
+            this.dataManager.changeParentFunc(props.parentChildData);
+        }
     }
 
     UNSAFE_componentWillReceiveProps = (nextProps: any) => {
@@ -348,28 +360,36 @@ export default class MaterialTable extends Component<any, any> {
             });
             query.orderDirection = orderDirection;
             this.onQueryChange(query, () => {
-                this.props.onOrderChange && this.props.onOrderChange(orderBy, orderDirection);
+                if (this.props.onOrderChange) {
+                    this.props.onOrderChange(orderBy, orderDirection);
+                }
             });
         }
         else {
             this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
-                this.props.onOrderChange && this.props.onOrderChange(orderBy, orderDirection);
+                if (this.props.onOrderChange) {
+                    this.props.onOrderChange(orderBy, orderDirection);
+                }
             });
         }
     }
 
-    onPageChange = (_event: any, page: any) => {
+    onPageChange = (page: number) => {
         if (this.isRemoteData()) {
             const query = { ...this.state.query };
             query.page = page;
             this.onQueryChange(query, () => {
-                this.props.onPageChange && this.props.onPageChange(page);
+                if (this.props.onPageChange) {
+                    this.props.onPageChange(page);
+                }
             });
         }
         else {
             this.dataManager.changeCurrentPage(page);
             this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
-                this.props.onPageChange && this.props.onPageChange(page);
+                if (this.props.onPageChange) {
+                    this.props.onPageChange(page);
+                }
             });
         }
     }
@@ -384,13 +404,17 @@ export default class MaterialTable extends Component<any, any> {
             query.pageSize = event.target.value;
             query.page = 0;
             this.onQueryChange(query, () => {
-                this.props.onRowsPerPageChange && this.props.onRowsPerPageChange(pageSize);
+                if (this.props.onRowsPerPageChange) {
+                    this.props.onRowsPerPageChange(pageSize);
+                }
             });
         }
         else {
             this.dataManager.changeCurrentPage(0);
             this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
-                this.props.onRowsPerPageChange && this.props.onRowsPerPageChange(pageSize);
+                if (this.props.onRowsPerPageChange) {
+                    this.props.onRowsPerPageChange(pageSize);
+                }
             });
         }
     }
@@ -423,7 +447,7 @@ export default class MaterialTable extends Component<any, any> {
         }
     }
 
-    onGroupExpandChanged = (path: any) => {
+    onGroupExpandChanged = (path: number[]) => {
         this.dataManager.changeGroupExpand(path);
         this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
     }
@@ -527,7 +551,7 @@ export default class MaterialTable extends Component<any, any> {
         }
     }
 
-    onRowSelected = (event: any, path:any, dataClicked: any) => {
+    onRowSelected = (event: ChangeEvent<HTMLInputElement>, path: number[], dataClicked: any) => {
         this.dataManager.changeRowSelected(event.target.checked, path);
         this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
             this.onSelectionChange(dataClicked);
@@ -544,7 +568,9 @@ export default class MaterialTable extends Component<any, any> {
                         selectedRows.push(row);
                     }
 
-                    row.tableData.childRows && findSelecteds(row.tableData.childRows);
+                    if (row.tableData.childRows) {
+                        findSelecteds(row.tableData.childRows);
+                    }
                 });
             };
 
@@ -572,7 +598,7 @@ export default class MaterialTable extends Component<any, any> {
         }
     }, this.props.options.debounceInterval)
 
-    onFilterChange = (columnId: any, value: any) => {
+    onFilterChange = (columnId: number, value: any) => {
         this.dataManager.changeFilterValue(columnId, value);
         this.setState({}, this.onFilterChangeDebounce);
     }
@@ -607,11 +633,13 @@ export default class MaterialTable extends Component<any, any> {
     onTreeExpandChanged = (path: any, data: any) => {
         this.dataManager.changeTreeExpand(path);
         this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
-            this.props.onTreeExpandChange && this.props.onTreeExpandChange(data, data.tableData.isTreeExpanded);
+            if (this.props.onTreeExpandChange) {
+                this.props.onTreeExpandChange(data, data.tableData.isTreeExpanded);
+            }
         });
     }
 
-    onToggleDetailPanel = (path: any, render: any) => {
+    onToggleDetailPanel = (path: number[], render: any) => {
         this.dataManager.changeDetailPanelVisibility(path, render);
         this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 });
     }
@@ -644,9 +672,18 @@ export default class MaterialTable extends Component<any, any> {
                                 page={this.isRemoteData() ? this.state.query.page : this.state.currentPage}
                                 onPageChange={this.onPageChange}
                                 onRowsPerPageChange={this.onRowsPerPageChange}
-                                ActionsComponent={(subProps: any) => props.options.paginationType === 'normal'
-                                    ? <MComponents.MTablePagination {...subProps} icons={props.icons} localization={localization} showFirstLastPageButtons={props.options.showFirstLastPageButtons}/>
-                                    : <MComponents.MTableSteppedPagination {...subProps} icons={props.icons} localization={localization} />
+                                ActionsComponent={(subProps: TablePaginationActionsProps) => props.options.paginationType === 'normal'
+                                    ? <MComponents.MTablePaginationInner
+                                        {...subProps}
+                                        icons={props.icons}
+                                        localization={localization}
+                                        showFirstLastPageButtons={props.options.showFirstLastPageButtons}
+                                    />
+                                    : <MComponents.MTableSteppedPagination
+                                        {...subProps}
+                                        icons={props.icons}
+                                        localization={localization}
+                                    />
                                 }
                                 labelDisplayedRows={(row: any) => localization.labelDisplayedRows.replace('{from}', row.from).replace('{to}', row.to).replace('{count}', row.count)}
                                 labelRowsPerPage={localization.labelRowsPerPage}
@@ -663,34 +700,34 @@ export default class MaterialTable extends Component<any, any> {
 
         return <Table id={this.id}>
             {props.options.header &&
-            <props.components.Header
-                localization={{ ...MaterialTable.defaultProps.localization.header, ...this.props.localization.header, ...this.props.localization.filter }}
-                columns={this.state.columns}
-                draggableHeader={props.options.draggableHeader}
-                hasSelection={props.options.selection}
-                headerClassName={`${props.options.headerClassName || ''}${this.state.isDragged ? ' is-dragged' : ''}`}
-                headerStyle={props.options.headerStyle}
-                selectedCount={this.state.selectedCount}
-                dataCount={props.parentChildData ? this.state.treefiedDataLength : this.state.data.length}
-                hasDetailPanel={!!props.detailPanel}
-                detailPanelColumnAlignment={props.options.detailPanelColumnAlignment}
-                showActionsColumn={props.actions && props.actions.filter((a: any) => !a.isFreeAction && !this.props.options.selection).length > 0}
-                showSelectAllCheckbox={props.options.showSelectAllCheckbox}
-                orderBy={this.state.orderBy}
-                orderDirection={this.state.orderDirection}
-                onAllSelected={this.onAllSelected}
-                onOrderChange={this.onChangeOrder}
-                actionsHeaderIndex={props.options.actionsColumnIndex}
-                sorting={props.options.sorting}
-                grouping={props.options.grouping}
-                filtering={props.options.filtering}
-                filterType={props.options.filterType}
-                isTreeData={this.props.parentChildData !== undefined}
-                icons={this.props.icons}
-                onFilterChanged={this.onFilterChange}
-                components={props.components}
-                fixedColumns={props.options.fixedColumns}
-            />
+                <props.components.Header
+                    localization={{ ...MaterialTable.defaultProps.localization.header, ...this.props.localization.header, ...this.props.localization.filter }}
+                    columns={this.state.columns}
+                    draggableHeader={props.options.draggableHeader}
+                    hasSelection={props.options.selection}
+                    headerClassName={`${props.options.headerClassName || ''}${this.state.isDragged ? ' is-dragged' : ''}`}
+                    headerStyle={props.options.headerStyle}
+                    selectedCount={this.state.selectedCount}
+                    dataCount={props.parentChildData ? this.state.treefiedDataLength : this.state.data.length}
+                    hasDetailPanel={!!props.detailPanel}
+                    detailPanelColumnAlignment={props.options.detailPanelColumnAlignment}
+                    showActionsColumn={props.actions && props.actions.filter((a: any) => !a.isFreeAction && !this.props.options.selection).length > 0}
+                    showSelectAllCheckbox={props.options.showSelectAllCheckbox}
+                    orderBy={this.state.orderBy}
+                    orderDirection={this.state.orderDirection}
+                    onAllSelected={this.onAllSelected}
+                    onOrderChange={this.onChangeOrder}
+                    actionsHeaderIndex={props.options.actionsColumnIndex}
+                    sorting={props.options.sorting}
+                    grouping={props.options.grouping}
+                    filtering={props.options.filtering}
+                    filterType={props.options.filterType}
+                    isTreeData={this.props.parentChildData !== undefined}
+                    icons={this.props.icons}
+                    onFilterChanged={this.onFilterChange}
+                    components={props.components}
+                    fixedColumns={props.options.fixedColumns}
+                />
             }
             <props.components.Body
                 actions={props.actions}
@@ -815,37 +852,37 @@ export default class MaterialTable extends Component<any, any> {
                     </MComponents.MTAbleScrollBar>
 
                     {(this.state.isLoading || props.isLoading) && props.options.loadingType === 'linear' &&
-                <div style={{ position: 'relative', width: '100%' }}>
-                    <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '100%' }}>
-                        <LinearProgress />
-                    </div>
-                </div>
+                        <div style={{ position: 'relative', width: '100%' }}>
+                            <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '100%' }}>
+                                <LinearProgress />
+                            </div>
+                        </div>
                     }
                     {this.renderFooter()}
 
                     {(this.state.isLoading || props.isLoading) && props.options.loadingType === 'overlay' &&
-                <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '100%', zIndex: 11 }}>
-                    <props.components.OverlayLoading theme={props.theme} />
-                </div>
+                        <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '100%', zIndex: 11 }}>
+                            <props.components.OverlayLoading theme={props.theme} />
+                        </div>
                     }
                 </props.components.Container>
                 <style>{
                     `.totals-row td.MuiTableCell-footer:before {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: -1px;
-                width: 100%;
-                border-bottom: 1px solid rgba(224, 224, 224, 1);
-            }
-            tbody td.cell-fixed:after,  thead th.MuiTableCell-head:after {
-                content: '';
-                position: absolute;
-                left: 0;
-                bottom: -1px;
-                width: 100%;
-                border-bottom: 1px solid rgba(224, 224, 224, 1);
-            }`
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        top: -1px;
+                        width: 100%;
+                        border-bottom: 1px solid rgba(224, 224, 224, 1);
+                    }
+                    tbody td.cell-fixed:after,  thead th.MuiTableCell-head:after {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        bottom: -1px;
+                        width: 100%;
+                        border-bottom: 1px solid rgba(224, 224, 224, 1);
+                    }`
                 }</style>
             </DragDropContext>
         );

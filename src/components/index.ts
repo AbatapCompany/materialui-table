@@ -13,7 +13,7 @@ import MTableGroupRow from './m-table-group-row';
 import MTableHeader from './m-table-header';
 import MTableInfinite from './m-table-infinite';
 import MTableOverlayLoading from './m-table-overlay-loading';
-import MTablePagination from './m-table-pagination';
+import MTablePaginationInner from './m-table-pagination-inner';
 import MTAbleScrollBar from './m-table-scrollbar';
 import MTableSteppedPagination from './m-table-stepped-pagination';
 import MTableToolbar from './m-table-toolbar';
@@ -35,7 +35,7 @@ export {
     MTableHeader,
     MTableInfinite,
     MTableOverlayLoading,
-    MTablePagination,
+    MTablePaginationInner,
     MTAbleScrollBar,
     MTableSteppedPagination,
     MTableToolbar,

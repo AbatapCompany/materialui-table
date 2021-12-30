@@ -9,7 +9,7 @@
     "types"
   ],
   "scripts": {
-    "start": "webpack serve --config ./demo/webpack.config.js --mode development",
+    "dev": "webpack serve --config ./demo/webpack.config.js --mode development",
     "build": "tsc",
     "lint": "npm run eslint && npm run tsc",
     "eslint": "eslint src/**",

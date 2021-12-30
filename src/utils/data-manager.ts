@@ -1,5 +1,7 @@
 /* eslint-disable max-lines */
+import { SortDirection } from '@mui/material';
 import formatDate from 'date-fns/format';
+import { Column, InfinityChangePropPolicies, Modes, Pagings } from '../models/material-table.model';
 import { byString } from './byString';
 
 export default class DataManager {
@@ -11,7 +13,7 @@ export default class DataManager {
     lastDetailPanelRow: any = undefined;
     lastEditingRow: any = undefined;
     orderBy = -1;
-    orderDirection = '';
+    orderDirection: SortDirection = false;
     pageSize = 5;
     paging = 'classic';
     infinityChangePropPolicy = 'append';
@@ -25,7 +27,7 @@ export default class DataManager {
     sortChilds = false;
 
     data: any[] = [];
-    columns: any[] = [];
+    columns: Column[] = [];
 
     filteredData: any[] = [];
     searchedData: any[] = [];
@@ -44,9 +46,6 @@ export default class DataManager {
 
     rootGroupsIndex = {};
 
-    constructor() {
-    }
-
     setData(data: any) {
         this.selectedCount = 0;
         let alreadyEditableRow = null;
@@ -56,10 +55,11 @@ export default class DataManager {
                 this.selectedCount++;
             }
             if (
-                this.lastEditingRow
-            && row.id !== undefined
-            && row.id === this.lastEditingRow.id
-            && JSON.stringify({ ...row, tableData: null }) === JSON.stringify({ ...this.lastEditingRow, tableData: null })) {
+                this.lastEditingRow &&
+                row.id !== undefined &&
+                row.id === this.lastEditingRow.id &&
+                JSON.stringify({ ...row, tableData: null }) === JSON.stringify({ ...this.lastEditingRow, tableData: null })
+            ) {
                 alreadyEditableRow = row;
             }
             return row;
@@ -80,8 +80,8 @@ export default class DataManager {
         this.filtered = false;
     }
 
-    setColumns(columns: any[]) {
-        this.columns = columns.map((columnDef: any, index: number) => {
+    setColumns(columns: Column[]) {
+        this.columns = columns.map((columnDef, index) => {
             columnDef.tableData = {
                 columnOrder: index,
                 filterValue: columnDef.defaultFilter,
@@ -94,62 +94,62 @@ export default class DataManager {
         });
     }
 
-    setDefaultExpanded(expanded: any) {
+    setDefaultExpanded(expanded: boolean) {
         this.defaultExpanded = expanded;
     }
 
-    setAggregateChilds(aggregateChilds: any) {
+    setAggregateChilds(aggregateChilds: boolean) {
         this.aggregateChilds = aggregateChilds;
     }
 
-    setFilterChilds(filterChilds: any) {
+    setFilterChilds(filterChilds: boolean) {
         this.filterChilds = filterChilds;
     }
 
-    setSortChilds(sortChilds: any) {
+    setSortChilds(sortChilds: boolean) {
         this.sortChilds = sortChilds;
     }
 
-    changeApplySearch(applySearch: any) {
+    changeApplySearch(applySearch: boolean) {
         this.applySearch = applySearch;
         this.searched = false;
     }
 
-    changeApplyFilters(applyFilters: any) {
+    changeApplyFilters(applyFilters: boolean) {
         this.applyFilters = applyFilters;
         this.filtered = false;
     }
 
-    changePaging(paging: any) {
+    changePaging(paging: Pagings) {
         this.paging = paging;
         this.paged = false;
     }
 
-    changeInfinityType(infinityChangePropPolicy: any) {
+    changeInfinityType(infinityChangePropPolicy: InfinityChangePropPolicies) {
         this.infinityChangePropPolicy = infinityChangePropPolicy;
     }
 
-    changeCurrentPage(currentPage: any) {
+    changeCurrentPage(currentPage: number) {
         this.currentPage = currentPage;
         this.paged = false;
     }
 
-    changePageSize(pageSize: any) {
+    changePageSize(pageSize: number) {
         this.pageSize = pageSize;
         this.paged = false;
     }
 
-    changeParentFunc(parentFunc: any) {
+    changeParentFunc(parentFunc: (row: any, rows: any[]) => any) {
         this.parentFunc = parentFunc;
     }
 
-    changeFilterValue(columnId: any, value: any) {
+    changeFilterValue(columnId: number, value: any) {
         const finded = this.columns.find(column => column.tableData.id === columnId);
         finded.tableData.filterValue = value;
         this.filtered = false;
     }
 
-    changeRowSelected(checked: any, path: any) {
+    changeRowSelected(checked: boolean, path: number[]) {
         const rowData = this.findDataByPath(this.sortedData, path);
         rowData.tableData.checked = checked;
         this.selectedCount = this.selectedCount + (checked ? 1 : -1);
@@ -169,7 +169,7 @@ export default class DataManager {
         this.filtered = false;
     }
 
-    changeDetailPanelVisibility(path: any, render: any) {
+    changeDetailPanelVisibility(path: number[], render: any) {
         const rowData = this.findDataByPath(this.sortedData, path);
 
         if ((rowData.tableData.showDetailPanel || '').toString() === render.toString()) {
@@ -186,17 +186,17 @@ export default class DataManager {
         this.lastDetailPanelRow = rowData;
     }
 
-    changeGroupExpand(path: any) {
+    changeGroupExpand(path: number[]) {
         const rowData = this.findDataByPath(this.sortedData, path);
         rowData.isExpanded = !rowData.isExpanded;
     }
 
-    changeSearchText(searchText: any) {
+    changeSearchText(searchText: string) {
         this.searchText = searchText;
         this.searched = false;
     }
 
-    changeRowEditing(rowData?: any, mode?: any) {
+    changeRowEditing(rowData?: any, mode?: Modes) {
         if (rowData) {
             rowData.tableData.editing = mode;
 
@@ -217,7 +217,7 @@ export default class DataManager {
         }
     }
 
-    changeAllSelected(checked: any) {
+    changeAllSelected(checked: boolean) {
         let selectedCount = 0;
         if (this.isDataType('group')) {
             const setCheck = (data: any) => {
@@ -247,7 +247,7 @@ export default class DataManager {
         this.selectedCount = checked ? selectedCount : 0;
     }
 
-    changeOrder(orderBy: any, orderDirection: any) {
+    changeOrder(orderBy: number, orderDirection: SortDirection) {
         this.orderBy = orderBy;
         this.orderDirection = orderDirection;
         this.currentPage = 0;
@@ -255,7 +255,7 @@ export default class DataManager {
         this.sorted = false;
     }
 
-    changeGroupOrder(columnId: any) {
+    changeGroupOrder(columnId: number) {
         const column = this.columns.find(c => c.tableData.id === columnId);
 
         if (column.tableData.groupSort === 'asc') {
@@ -279,12 +279,12 @@ export default class DataManager {
         return groupedResult;
     }
 
-    changeColumnHidden(columnId: any, hidden: any) {
+    changeColumnHidden(columnId: number, hidden: boolean) {
         const column = this.columns.find(c => c.tableData.id === columnId);
         column.hidden = hidden;
     }
 
-    changeTreeExpand(path: any) {
+    changeTreeExpand(path: number[]) {
         const rowData = this.findDataByPath(this.sortedData, path);
         rowData.tableData.isTreeExpanded = !rowData.tableData.isTreeExpanded;
     }
@@ -386,14 +386,14 @@ export default class DataManager {
         return groupedResult;
     }
 
-    findDataByPath = (renderData: any, path: any) => {
+    findDataByPath = (renderData: any, path: number[]) => {
         if (this.isDataType('tree')) {
-            const node = path.reduce((result: any, current: any) => {
+            const node = path.reduce((result: any, current) => {
                 return (
                     result &&
-            result.tableData &&
-            result.tableData.childRows &&
-            result.tableData.childRows[current]
+                    result.tableData &&
+                    result.tableData.childRows &&
+                    result.tableData.childRows[current]
                 );
             }, { tableData: { childRows: renderData } });
 
@@ -417,7 +417,7 @@ export default class DataManager {
         }
     }
 
-    findGroupByGroupPath(renderData: any, path: any[]): any {
+    findGroupByGroupPath(renderData: any, path: number[]): any {
         let currentGroups = renderData;
         let result = undefined;
         path.forEach((pathItem: any) => {
@@ -447,7 +447,7 @@ export default class DataManager {
         return result;
     }
 
-    getFieldValue = (rowData: any, columnDef: any, lookup = true) => {
+    getFieldValue = (rowData: any, columnDef: Column, lookup = true) => {
         let value = (typeof rowData[columnDef.field] !== 'undefined' ? rowData[columnDef.field] : byString(rowData, columnDef.field));
         if (columnDef.lookup && lookup) {
             value = columnDef.lookup[value];
@@ -662,7 +662,7 @@ export default class DataManager {
     }
 
     getParent = (row: any) => {
-        if (this.parentFunc) {
+        if (typeof this.parentFunc === 'function') {
             return this.parentFunc(row, this.data);
         }
         return null;
@@ -802,7 +802,7 @@ export default class DataManager {
                 .filter(col => col.tableData.groupOrder > -1)
                 .sort((col1, col2) => col1.tableData.groupOrder - col2.tableData.groupOrder);
 
-            const sortGroups = (list: any, columnDef: any) => {
+            const sortGroups = (list: any, columnDef: Column) => {
                 if (columnDef.customSort) {
                     return list.sort(
                         columnDef.tableData.groupSort === 'desc'
@@ -880,7 +880,7 @@ export default class DataManager {
         this.paged = true;
     }
 
-    getAggregation = (data: any, columnDef: any, lookup = true, fromExport = false) => {
+    getAggregation = (data: any, columnDef: Column, lookup = true, fromExport = false) => {
         const filteredData = this.aggregateChilds
             ? data
             : data.filter((item: any) => !this.getParent(item));
