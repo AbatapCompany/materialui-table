@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { Table, TableFooter, TableRow, LinearProgress } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableFooter from '@mui/material/TableFooter';
+import TableRow from '@mui/material/TableRow';
+import LinearProgress from '@mui/material/LinearProgress';
 import DoubleScrollbar from "react-double-scrollbar";
 import * as React from 'react';
 import { MTableInfinite, MTablePagination, MTableSteppedPagination } from './components';
