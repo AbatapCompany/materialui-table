@@ -1,4 +1,5 @@
-import { Grid, Switch } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Switch from '@mui/material/Switch';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import ReactDOM from 'react-dom';
