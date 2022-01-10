@@ -217,18 +217,18 @@ class MTableFilterButton extends Component<MTableFilterButtonProps, any> {
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position='start' className={classes.startAdornment}>
-                [
+                                [
                             </InputAdornment>
                         ),
                         endAdornment: (
                             <>
                                 {
                                     ((columnDef.tableData.filterValue && columnDef.tableData.filterValue[0]) || '') !== '' &&
-                    <InputAdornment position='end' className={classes.endAdornment}>
-                        <IconButton className={classes.clearIcon} onClick={() => this.handleFilterNumericChange(columnDef, '', 0)}>
-                            <ClearIcon />
-                        </IconButton>
-                    </InputAdornment>
+                                    <InputAdornment position='end' className={classes.endAdornment}>
+                                        <IconButton className={classes.clearIcon} onClick={() => this.handleFilterNumericChange(columnDef, '', 0)}>
+                                            <ClearIcon />
+                                        </IconButton>
+                                    </InputAdornment>
                                 }
                             </>
                         )
@@ -247,12 +247,12 @@ class MTableFilterButton extends Component<MTableFilterButtonProps, any> {
                             <InputAdornment position='end' className={classes.endAdornment}>
                                 {
                                     ((columnDef.tableData.filterValue && columnDef.tableData.filterValue[1]) || '') !== '' &&
-                <IconButton className={classes.clearIcon} onClick={() => this.handleFilterNumericChange(columnDef, '', 1)}>
-                    <ClearIcon />
-                </IconButton>
+                                    <IconButton className={classes.clearIcon} onClick={() => this.handleFilterNumericChange(columnDef, '', 1)}>
+                                        <ClearIcon />
+                                    </IconButton>
                                 }
                                 <Typography component='p' variant='body1' >
-                    ]
+                                    ]
                                 </Typography>
                             </InputAdornment>
                         )
