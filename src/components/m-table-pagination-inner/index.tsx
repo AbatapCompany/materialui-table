@@ -1,4 +1,4 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -19,20 +19,20 @@ class MTablePaginationInner extends Component<MTablePaginationProps> {
         }
     }
 
-    handleFirstPageButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
-        this.props.onPageChange(event, 0);
+    handleFirstPageButtonClick = () => {
+        this.props.onPageChange(0);
     }
 
-    handleBackButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
-        this.props.onPageChange(event, this.props.page - 1);
+    handleBackButtonClick = () => {
+        this.props.onPageChange(this.props.page - 1);
     }
 
-    handleNextButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
-        this.props.onPageChange(event, this.props.page + 1);
+    handleNextButtonClick = () => {
+        this.props.onPageChange(this.props.page + 1);
     }
 
-    handleLastPageButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
-        this.props.onPageChange(event, Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1));
+    handleLastPageButtonClick = () => {
+        this.props.onPageChange(Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1));
     }
 
     render() {

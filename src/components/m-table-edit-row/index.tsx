@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import { byString } from '../../utils/byString';
 import { setByString } from '../../utils/setByString';
 import { MTableEditRowProps } from './models';
-import { Column } from '../../models/material-table.model';
 
 export default class MTableEditRow extends Component<MTableEditRowProps, any> {
 

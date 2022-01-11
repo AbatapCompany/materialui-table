@@ -9,6 +9,7 @@ import Icon from '@mui/material/Icon';
 import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { debounce } from 'debounce';
+import omit from 'lodash/omit';
 import * as MComponents from './components';
 import DataManager from './utils/data-manager';
 import { MaterialTableProps } from 'models/material-table.model';
@@ -180,7 +181,7 @@ export default class MaterialTable extends Component<MaterialTableProps, any> {
 
         this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
             if (typeof this.props.data === 'function') {
-                this.props.data(query)
+                void this.props.data(query)
                     .then((result: any) => {
                         query.totalCount = result.totalCount;
                         query.page = result.page;
@@ -195,9 +196,6 @@ export default class MaterialTable extends Component<MaterialTableProps, any> {
                                 fn();
                             }
                         });
-                    })
-                    .catch((error) => {
-                        console.error(error);
                     });
             }
         });
@@ -387,7 +385,7 @@ export default class MaterialTable extends Component<MaterialTableProps, any> {
         else {
             this.dataManager.changeCurrentPage(page);
             this.setState({ ...this.dataManager.getRenderState(), tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
-                if (this.props.onPageChange) {
+                if (typeof this.props.onPageChange === 'function') {
                     this.props.onPageChange(page);
                 }
             });
@@ -672,19 +670,23 @@ export default class MaterialTable extends Component<MaterialTableProps, any> {
                                 page={this.isRemoteData() ? this.state.query.page : this.state.currentPage}
                                 onPageChange={this.onPageChange}
                                 onRowsPerPageChange={this.onRowsPerPageChange}
-                                ActionsComponent={(subProps: TablePaginationActionsProps) => props.options.paginationType === 'normal'
-                                    ? <MComponents.MTablePaginationInner
-                                        {...subProps}
-                                        icons={props.icons}
-                                        localization={localization}
-                                        showFirstLastPageButtons={props.options.showFirstLastPageButtons}
-                                    />
-                                    : <MComponents.MTableSteppedPagination
-                                        {...subProps}
-                                        icons={props.icons}
-                                        localization={localization}
-                                    />
-                                }
+                                ActionsComponent={(subProps: TablePaginationActionsProps) => {
+                                    const paginationProps = omit(subProps, 'onPageChange');
+                                    return props.options.paginationType === 'normal'
+                                        ? <MComponents.MTablePaginationInner
+                                            {...paginationProps}
+                                            onPageChange={this.onPageChange}
+                                            icons={props.icons}
+                                            localization={localization}
+                                            showFirstLastPageButtons={props.options.showFirstLastPageButtons}
+                                        />
+                                        : <MComponents.MTableSteppedPagination
+                                            {...paginationProps}
+                                            onPageChange={this.onPageChange}
+                                            icons={props.icons}
+                                            localization={localization}
+                                        />;
+                                }}
                                 labelDisplayedRows={(row: any) => localization.labelDisplayedRows.replace('{from}', row.from).replace('{to}', row.to).replace('{count}', row.count)}
                                 labelRowsPerPage={localization.labelRowsPerPage}
                             />

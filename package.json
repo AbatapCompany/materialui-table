@@ -11,10 +11,9 @@
   "scripts": {
     "dev": "webpack serve --config ./demo/webpack.config.js --mode development",
     "build": "tsc",
-    "lint": "npm run eslint && npm run tsc",
-    "eslint": "eslint src/**",
+    "lint": "eslint src/**",
     "lint:fix": "eslint src/** --fix",
-    "check": "tsc --noEmit --lib es6,dom --skipLibCheck types/index.d.ts"
+    "check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
