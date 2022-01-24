@@ -209,6 +209,7 @@ class MTableFilterButton extends Component<MTableFilterButtonProps, any> {
         return (
             <>
                 <TextField
+                    variant='standard'
                     autoFocus
                     type='number'
                     className={classes.filterNumericFrom}
@@ -238,6 +239,7 @@ class MTableFilterButton extends Component<MTableFilterButtonProps, any> {
             ,
                 </span>
                 <TextField
+                    variant='standard'
                     type='number'
                     className={classes.filterNumericTo}
                     value={(columnDef.tableData.filterValue && columnDef.tableData.filterValue[1]) || ''}
@@ -266,6 +268,7 @@ class MTableFilterButton extends Component<MTableFilterButtonProps, any> {
 
         return (
             <TextField
+                variant='standard'
                 autoFocus
                 style={columnDef.type === 'numeric' ? { float: 'right' } : {}}
                 type={columnDef.type === 'numeric' ? 'number' : 'text'}
@@ -305,7 +308,12 @@ class MTableFilterButton extends Component<MTableFilterButtonProps, any> {
                     label=''
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                 />
             );
@@ -316,7 +324,12 @@ class MTableFilterButton extends Component<MTableFilterButtonProps, any> {
                     label=''
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                 />
             );
@@ -327,7 +340,12 @@ class MTableFilterButton extends Component<MTableFilterButtonProps, any> {
                     label=''
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                 />
             );

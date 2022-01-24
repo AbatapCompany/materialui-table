@@ -92,6 +92,7 @@ export default class MTableFilterRow extends Component<MTableFilterRowProps> {
         const FilterIcon = this.props.icons.Filter;
         return (
             <TextField
+                variant='standard'
                 style={columnDef.type === 'numeric' ? { float: 'right' } : {}}
                 type={columnDef.type === 'numeric' ? 'number' : 'text'}
                 value={columnDef.tableData.filterValue || ''}
@@ -121,7 +122,12 @@ export default class MTableFilterRow extends Component<MTableFilterRowProps> {
                     label=''
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                 />
             );
@@ -132,7 +138,12 @@ export default class MTableFilterRow extends Component<MTableFilterRowProps> {
                     label=''
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                 />
             );
@@ -143,7 +154,12 @@ export default class MTableFilterRow extends Component<MTableFilterRowProps> {
                     label=''
                     value={columnDef.tableData.filterValue || null}
                     onChange={onDateInputChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                 />
             );
