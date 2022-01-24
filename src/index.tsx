@@ -1,7 +1,7 @@
 import React from 'react';
 import MaterialTable from './material-table';
+import { MaterialTableProps } from './models/material-table.model';
 import { withStyles } from '@mui/styles';
-// import { MaterialTableProps } from 'models/matrial-table.model';
 
 const styles = () => ({
     paginationRoot: {
@@ -42,5 +42,5 @@ const styles = () => ({
 });
 
 
-export default withStyles(styles, { withTheme: true })((props: any) => <MaterialTable {...props} ref={props.tableRef} />);
+export default withStyles(styles, { withTheme: true })((props: MaterialTableProps) => <MaterialTable {...props} ref={props.tableRef} />);
 export * from './components';

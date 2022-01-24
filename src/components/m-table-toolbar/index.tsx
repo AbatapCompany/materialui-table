@@ -225,6 +225,7 @@ export class MTableToolbar extends Component<MTableToolbarProps, any> {
         if (this.props.search) {
             return (
                 <TextField
+                    variant='standard'
                     className={this.props.searchFieldAlignment === 'left' && this.props.showTitle === false ? null : this.props.classes.searchField}
                     value={this.props.searchText}
                     onChange={event => this.props.onSearchChanged(event.target.value)}

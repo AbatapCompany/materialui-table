@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import useScroll from 'ahooks/es/useScroll';
-import useSize from 'ahooks/es/useSize';
+import useScroll from 'ahooks/lib/useScroll';
+import useSize from 'ahooks/lib/useSize';
 import { MTableInfiniteProps } from './models';
 
 export default function(props: MTableInfiniteProps): JSX.Element {
@@ -24,7 +24,8 @@ export default function(props: MTableInfiniteProps): JSX.Element {
     useEffect(() => {
         if (
             props.paging === 'infinite' &&
-            sizes.height &&
+            typeof sizes?.height === 'number' &&
+            typeof scroll?.top === 'number' &&
             sizes.height > props.maxBodyHeight &&
             props.pageSize * nextPage < props.totalCount &&
             scroll.top > props.maxBodyHeight
@@ -38,7 +39,7 @@ export default function(props: MTableInfiniteProps): JSX.Element {
                 setScrolled(false);
             }
         }
-    }, [scroll.top, sizes.height]);
+    }, [scroll?.top, sizes?.height]);
 
     if (props.paging === 'infinite') {
         return (

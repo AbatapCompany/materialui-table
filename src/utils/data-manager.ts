@@ -319,7 +319,7 @@ export default class DataManager {
             }
         }
         else if (result.destination.droppableId === 'groups' && result.source.droppableId === 'headers') {
-            const newGroup = this.columns.find(c => c.tableData.id === result.draggableId);
+            const newGroup = this.columns.find(c => c.tableData.id === +result.draggableId);
 
             if (newGroup.grouping === false || !newGroup.field) {
                 return;

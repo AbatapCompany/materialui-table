@@ -21,6 +21,7 @@ export default class MTableEditField extends Component<MTableEditFieldProps> {
         return (
             <Select
                 {...this.getProps()}
+                variant='standard'
                 value={this.props.value === undefined ? '' : this.props.value}
                 onChange={event => this.props.onChange(event.target.value)}
                 style={{
@@ -61,7 +62,12 @@ export default class MTableEditField extends Component<MTableEditFieldProps> {
                     inputFormat='dd.MM.yyyy'
                     value={this.props.value || null}
                     onChange={this.props.onChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                     InputProps={{
                         style: {
@@ -81,7 +87,12 @@ export default class MTableEditField extends Component<MTableEditFieldProps> {
                     inputFormat='HH:mm:ss'
                     value={this.props.value || null}
                     onChange={this.props.onChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                     InputProps={{
                         style: {
@@ -101,7 +112,12 @@ export default class MTableEditField extends Component<MTableEditFieldProps> {
                     inputFormat='dd.MM.yyyy HH:mm:ss'
                     value={this.props.value || null}
                     onChange={this.props.onChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => (
+                        <TextField
+                            variant='standard'
+                            {...params}
+                        />
+                    )}
                     clearable
                     InputProps={{
                         style: {
@@ -118,6 +134,7 @@ export default class MTableEditField extends Component<MTableEditFieldProps> {
         return (
             <TextField
                 {...this.getProps()}
+                variant='standard'
                 style={this.props.columnDef.type === 'numeric' ? { float: 'right' } : {}}
                 type={this.props.columnDef.type === 'numeric' ? 'number' : 'text'}
                 placeholder={placeholder}

@@ -12,7 +12,7 @@ import { debounce } from 'debounce';
 import omit from 'lodash/omit';
 import * as MComponents from './components';
 import DataManager from './utils/data-manager';
-import { MaterialTableProps } from 'models/material-table.model';
+import { MaterialTableProps } from './models/material-table.model';
 import { SortDirection } from '@mui/material';
 
 let tableCounter = 1;

@@ -148,7 +148,7 @@ export interface Column {
     searchable?: boolean;
     sorting?: boolean;
     strictDigits?: boolean;
-    tableData: any;
+    tableData?: any;
     title?: string | React.ReactElement<any>;
     type?: ColumnTypes;
 }
