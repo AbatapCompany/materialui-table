@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "baseUrl": "./src",
+    "baseUrl": "src",
     "lib": [
       "DOM",
       "ES2020"
     ],
-    "outDir": "./dist",
-    "sourceMap": true,
+    "outDir": "dist",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,7 +20,8 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "suppressImplicitAnyIndexErrors": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "declaration": true
   },
   "exclude": [
     "node_modules",
@@ -30,9 +30,5 @@
     "acceptance-tests",
     "webpack",
     "jest"
-  ],
-  "include": [
-    "demo",
-    "src"
   ]
 }

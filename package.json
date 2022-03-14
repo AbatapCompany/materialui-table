@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "webpack serve --config ./demo/webpack.config.js --mode development",
-    "build": "tsc",
+    "build": "tsc --project src/tsconfig.json",
     "lint": "eslint src/**",
     "lint:fix": "eslint src/** --fix",
     "check": "tsc --noEmit"
