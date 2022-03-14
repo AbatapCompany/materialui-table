@@ -1,6 +1,6 @@
 {
   "name": "@softmedialab/materialui-table",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Datatable for React based on https://material-table.com with additional features",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "webpack serve --config ./demo/webpack.config.js --mode development",
-    "build": "tsc",
+    "build": "tsc --project src/tsconfig.json",
     "lint": "eslint src/**",
     "lint:fix": "eslint src/** --fix",
     "check": "tsc --noEmit"

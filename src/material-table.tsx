@@ -12,7 +12,7 @@ import { debounce } from 'debounce';
 import omit from 'lodash/omit';
 import * as MComponents from './components';
 import DataManager from './utils/data-manager';
-import { MaterialTableProps } from './models/material-table.model';
+import { MaterialTableProps, QueryResult } from './models/material-table.model';
 import { SortDirection } from '@mui/material';
 
 let tableCounter = 1;
@@ -182,7 +182,7 @@ export default class MaterialTable extends Component<MaterialTableProps, any> {
         this.setState({ isLoading: true, tableBodyVersion: this.state.tableBodyVersion + 1 }, () => {
             if (typeof this.props.data === 'function') {
                 void this.props.data(query)
-                    .then((result: any) => {
+                    .then((result: QueryResult) => {
                         query.totalCount = result.totalCount;
                         query.page = result.page;
                         this.dataManager.setData(result.data);
