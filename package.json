@@ -1,6 +1,6 @@
 {
   "name": "@softmedialab/materialui-table",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Datatable for React based on https://material-table.com with additional features",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -55,9 +55,6 @@
     "webpack-dev-server": "4.7.3"
   },
   "dependencies": {
-    "@emotion/react": "11.5.0",
-    "@emotion/styled": "11.3.0",
-    "@material-ui/pickers": "3.3.10",
     "@mui/icons-material": "5.1.0",
     "@mui/lab": "5.0.0-alpha.54",
     "@mui/material": "5.1.0",
