@@ -247,6 +247,7 @@ export interface Options {
   toolbar?: boolean;
   toolbarButtonAlignment?: 'left' | 'right';
   detailPanelColumnAlignment?: 'left' | 'right';
+  headerSortIcon?: React.JSXElementConstructor<{ className?: string }>;
 }
 
 export interface Localization {

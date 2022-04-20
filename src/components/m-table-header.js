@@ -68,6 +68,7 @@ export class MTableHeader extends React.Component {
               active={this.props.orderBy === columnDef.tableData.id}
               direction={this.props.orderDirection || 'asc'}
               IconComponent={this.props.headerSortIcon}
+              className={`direction-${this.props.orderDirection || 'asc'}`}
               onClick={() => {
                 const orderDirection = columnDef.tableData.id !== this.props.orderBy ? 'asc' : this.props.orderDirection === 'asc' ? 'desc' : 'asc';
                 this.props.onOrderChange(columnDef.tableData.id, orderDirection);
@@ -311,7 +312,8 @@ MTableHeader.propTypes = {
   actionsHeaderIndex: PropTypes.number,
   showActionsColumn: PropTypes.bool,
   showSelectAllCheckbox: PropTypes.bool,
-  fixedColumns: PropTypes.number
+  fixedColumns: PropTypes.number,
+  headerSortIcon:  PropTypes.elementType
 };
 
 // TODO: online fix style for top like a material-table ScrollBar
