@@ -3,6 +3,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import MaterialTable from '../src';
+import ArrowDropDownCircle from '@material-ui/icons/ArrowDropDownCircle';
 
 let direction = 'ltr';
 // direction = 'rtl';
@@ -205,6 +206,7 @@ const App = () => {
                   datetimeLocaleString: 'ru-RU',
                   strictDigits: true,
                   headerClassName: 'custom-header-class',
+                  headerSortIcon: ArrowDropDownCircle,
                 }}
                 parentChildData={(row, rows) => row.parentId && rows.find((a) => a.id === row.parentId) || null}
                 onChangeFilter={(items) => {console.log('onChangeFilter', items)} }

@@ -561,6 +561,7 @@ export default class MaterialTable extends React.Component {
           onFilterChanged={this.onFilterChange}
           components={props.components}
           fixedColumns={props.options.fixedColumns}
+          headerSortIcon={props.options.headerSortIcon}
         />
       }
       <props.components.Body
