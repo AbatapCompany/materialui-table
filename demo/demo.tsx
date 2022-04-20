@@ -6,6 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MaterialTable from '../src';
 import { Column, FilterTypes } from 'models/material-table.model';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 
 const theme = createTheme();
 
@@ -215,6 +216,7 @@ const App = () => {
                                     datetimeLocaleString: 'ru-RU',
                                     strictDigits: true,
                                     headerClassName: 'custom-header-class',
+                                    headerSortIcon: ArrowCircleUpIcon,
                                 }}
                                 parentChildData={(row: any, rows: any) => (row.parentId && rows.find((a: any) => a.id === row.parentId)) || null}
                                 onChangeFilter={(items: any) => { console.log('onChangeFilter', items); } }

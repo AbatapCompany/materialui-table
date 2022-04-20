@@ -30,6 +30,7 @@ export interface MTableHeaderProps {
     showActionsColumn: boolean;
     showSelectAllCheckbox: boolean;
     sorting?: boolean;
+    headerSortIcon?: React.JSXElementConstructor<{ className: string }>;
 
     // TODO unknown types
     onAllSelected: any; // function

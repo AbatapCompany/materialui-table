@@ -87,6 +87,7 @@ class MTableHeader extends Component<MTableHeaderProps> {
                         <TableSortLabel
                             active={this.props.orderBy === columnDef.tableData.id}
                             direction={this.props.orderDirection || 'asc'}
+                            IconComponent={this.props.headerSortIcon}
                             onClick={() => {
                                 const orderDirection = columnDef.tableData.id !== this.props.orderBy ? 'asc' : this.props.orderDirection === 'asc' ? 'desc' : 'asc';
                                 this.props.onOrderChange(columnDef.tableData.id, orderDirection);

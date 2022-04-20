@@ -266,6 +266,7 @@ export interface Options {
     toolbar?: boolean;
     toolbarButtonAlignment?: HorizontalDirections;
     detailPanelColumnAlignment?: HorizontalDirections;
+    headerSortIcon?: React.JSXElementConstructor<{ className?: string }>;
 }
 
 export interface LocalizationBodyEditRow {
