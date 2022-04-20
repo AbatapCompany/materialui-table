@@ -162,7 +162,8 @@ export const propTypes = {
     showTextRowsSelected: PropTypes.bool,
     sorting: PropTypes.bool,
     sortChilds: PropTypes.bool,
-    toolbar: PropTypes.bool
+    toolbar: PropTypes.bool,
+    headerSortIcon:  PropTypes.elementType
   }),
   localization: PropTypes.shape({
     grouping: PropTypes.shape({
