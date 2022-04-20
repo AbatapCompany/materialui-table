@@ -311,7 +311,8 @@ MTableHeader.propTypes = {
   actionsHeaderIndex: PropTypes.number,
   showActionsColumn: PropTypes.bool,
   showSelectAllCheckbox: PropTypes.bool,
-  fixedColumns: PropTypes.number
+  fixedColumns: PropTypes.number,
+  headerSortIcon:  PropTypes.elementType
 };
 
 // TODO: online fix style for top like a material-table ScrollBar
